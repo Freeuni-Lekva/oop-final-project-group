@@ -62,12 +62,20 @@ CREATE TABLE Questions (
 );
 
 -- AnswerOptions Table (for Multiple Choice)
-CREATE TABLE AnswerOptions (
+CREATE TABLE AnswerOptionsMC (
                                option_id INT AUTO_INCREMENT PRIMARY KEY,
                                question_id INT NOT NULL,
                                option_text TEXT NOT NULL,
                                is_correct BOOLEAN NOT NULL DEFAULT FALSE,
                                FOREIGN KEY (question_id) REFERENCES Questions(question_id) ON DELETE CASCADE
+);
+
+-- AnswerOptions Table (for Picture Response)
+CREATE TABLE AnswerOptionsPR (
+                                    option_id INT AUTO_INCREMENT PRIMARY KEY,
+                                    question_id INT NOT NULL,
+                                    option_text TEXT NOT NULL,
+                                    FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
 );
 
 -- UserQuizAttempts Table
@@ -93,7 +101,7 @@ CREATE TABLE UserAnswers (
                              is_correct BOOLEAN,
                              FOREIGN KEY (attempt_id) REFERENCES UserQuizAttempts(attempt_id) ON DELETE CASCADE,
                              FOREIGN KEY (question_id) REFERENCES Questions(question_id) ON DELETE CASCADE,
-                             FOREIGN KEY (selected_option_id) REFERENCES AnswerOptions(option_id) ON DELETE SET NULL
+                             FOREIGN KEY (selected_option_id) REFERENCES AnswerOptionsMC(option_id) ON DELETE SET NULL
 );
 
 -- Messages Table
