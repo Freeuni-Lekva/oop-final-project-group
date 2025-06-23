@@ -21,6 +21,7 @@ CREATE TABLE Friendships (
     CHECK (user_id1 < user_id2)
 );
 
+
 -- FriendRequests Table
 DROP TABLE IF EXISTS FriendRequests;
 CREATE TABLE FriendRequests (
@@ -67,6 +68,15 @@ CREATE TABLE AnswerOptions (
     option_text TEXT NOT NULL,
     is_correct BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (question_id) REFERENCES Questions(question_id) ON DELETE CASCADE
+);
+
+-- AnswerOptions Table (for Fill in the blank)
+CREATE TABLE FillInBlankAnswers (
+                                    answer_id INT AUTO_INCREMENT PRIMARY KEY,
+                                    question_id INT NOT NULL,
+                                    blank_index INT NOT NULL,
+                                    acceptable_answer TEXT NOT NULL,
+                                    FOREIGN KEY (question_id) REFERENCES Questions(question_id) ON DELETE CASCADE
 );
 
 -- UserQuizAttempts Table
