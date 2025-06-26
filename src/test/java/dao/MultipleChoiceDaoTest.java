@@ -13,24 +13,30 @@ public class MultipleChoiceDaoTest {
     private int testQuizId;
     private MultipleChoiceQuestion multipleChoiceQuestion;
     private MultipleChoiceQuestion multipleChoiceQuestion2;
+    private int userId;
 
     //Sets up the new quiz for the testing purposes
     @BeforeEach
     public void setUp() throws SQLException {
         connection = DatabaseConnection.getConnection();
-        connection.prepareStatement(
-                "INSERT IGNORE INTO Users (username, email, password_hash, salt) " +
-                        "VALUES ('testuser', 'test@example.com', 'testhash', 'testsalt')"
-        ).executeUpdate();
-
         PreparedStatement stmt = connection.prepareStatement(
+                "INSERT INTO Users (username, email, password_hash, salt) " +
+                        "VALUES ('testuser', 'test@example.com', 'testhash', 'testsalt')",
+                Statement.RETURN_GENERATED_KEYS
+        );
+        stmt.executeUpdate();
+        ResultSet keys = stmt.getGeneratedKeys();
+        keys.next();
+        userId = keys.getInt(1);
+
+        stmt = connection.prepareStatement(
                 "INSERT INTO Quizzes (creator_user_id, title) " +
                         "SELECT user_id, 'Test Quiz' FROM Users WHERE username = 'testuser'",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.executeUpdate();
 
-        ResultSet keys = stmt.getGeneratedKeys();
+        keys = stmt.getGeneratedKeys();
         keys.next();
         testQuizId = keys.getInt(1);
         keys.close();
@@ -42,8 +48,8 @@ public class MultipleChoiceDaoTest {
     //Cleans up all the tables
     @AfterEach
     public void cleanUp() throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Quizzes WHERE quiz_id = ?");
-        stmt.setInt(1, testQuizId);
+        PreparedStatement stmt = connection.prepareStatement("DELETE FROM Users WHERE user_id = ?");
+        stmt.setInt(1, userId);
         stmt.executeUpdate();
         stmt.close();
         connection.close();
