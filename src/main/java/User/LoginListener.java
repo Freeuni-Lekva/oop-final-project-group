@@ -1,6 +1,7 @@
 package User;
 
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
+import com.quizwebsite.friendship.FriendshipService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -15,12 +16,30 @@ public class LoginListener implements ServletContextListener{
 
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            UserDao uD = new UserDao();
-            ServletContext sc = sce.getServletContext();
-            sc.setAttribute("UserDao", uD);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to initialize UserDao in context listener", e);
+            DBCreate dbCreate = new DBCreate();
+            DBConnection connection = new DBConnection();
+            dbCreate.createDataBase(connection);
+            UserDao userDao = new UserDao();
+            sce.getServletContext().setAttribute("userDao", userDao);
+            FriendshipService friendshipService = new FriendshipService();
+            sce.getServletContext().setAttribute("friendshipService", friendshipService);
+
+            // Seed the database with default users for testing
+            try {
+                if (!userDao.containsUser("lasha")) {
+                    User lasha = new User("lasha", "gorgo1", "lasha@example.com");
+                    userDao.registerUser(lasha);
+                }
+                if (!userDao.containsUser("gorgo")) {
+                    User gorgo = new User("gorgo", "gorgo", "gorgo@example.com");
+                    userDao.registerUser(gorgo);
+                }
+            } catch (Exception e) {
+                // Log the error, but don't prevent the app from starting
+                sce.getServletContext().log("Error seeding default users", e);
+            }
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

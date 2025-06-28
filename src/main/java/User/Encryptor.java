@@ -31,7 +31,7 @@ public class Encryptor {
 	 such as "234a6f". with 2 chars for each byte in the array.
 	 (provided code)
 	*/
-    private static String hexToString(byte[] bytes) {
+    public static String hexToString(byte[] bytes) {
         StringBuffer buff = new StringBuffer();
         for (int i=0; i<bytes.length; i++) {
             int val = bytes[i];
@@ -40,6 +40,14 @@ public class Encryptor {
             buff.append(Integer.toString(val, 16));
         }
         return buff.toString();
+    }
+
+    public static byte[] stringToHex(String hex) {
+        byte[] bytes = new byte[hex.length() / 2];
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
+        }
+        return bytes;
     }
 
 

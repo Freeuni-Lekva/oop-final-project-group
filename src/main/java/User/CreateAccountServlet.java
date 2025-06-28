@@ -7,25 +7,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/Account")
 public class CreateAccountServlet extends HttpServlet {
+    private UserDao userDao;
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+    public void init() throws ServletException {
+        super.init();
+        this.userDao = (UserDao) getServletContext().getAttribute("userDao");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        UserDao uD = (UserDao) getServletContext().getAttribute("UserDao");
-
-        String username = req.getParameter("user");
-        String password = req.getParameter("pass");
+        String username = request.getParameter("user");
+        String password = request.getParameter("pass");
 
         try {
-            if(uD != null && uD.containsUser(username)) {
-                req.getRequestDispatcher("/NameInUse.jsp").forward(req, resp);
+            if(userDao.containsUser(username)) {
+                request.setAttribute("error", "Username is already taken.");
+                request.getRequestDispatcher("/CreateAccount.jsp").forward(request, response);
             }else{
                 User user = new User(username, password);
-                uD.registerUser(user);
-                req.setAttribute("username", username);
-                req.getRequestDispatcher("/Welcome.jsp").forward(req, resp);
+                userDao.registerUser(user);
+                response.sendRedirect(request.getContextPath() + "/login");
             }
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
