@@ -10,6 +10,15 @@
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
 
+  <!-- User Servlet (CRUD) -->
+  <servlet>
+    <servlet-name>UserServlet</servlet-name>
+    <servlet-class>User.UserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UserServlet</servlet-name>
+    <url-pattern>/users</url-pattern>
+  </servlet-mapping>
 
   <!-- Registration Servlet -->
   <servlet>
@@ -18,7 +27,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>CreateAccountServlet</servlet-name>
-    <url-pattern>/createAccount</url-pattern>
+    <url-pattern>/register</url-pattern>
   </servlet-mapping>
 
   <!-- Login Servlet -->
@@ -31,16 +40,6 @@
     <url-pattern>/login</url-pattern>
   </servlet-mapping>
 
-  <!-- Home Page Servlet -->
-  <servlet>
-    <servlet-name>HomePageServlet</servlet-name>
-    <servlet-class>User.HomePageServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>HomePageServlet</servlet-name>
-    <url-pattern>/home</url-pattern>
-  </servlet-mapping>
-
   <!-- Logout Servlet -->
   <servlet>
     <servlet-name>LogoutServlet</servlet-name>
@@ -50,40 +49,51 @@
     <servlet-name>LogoutServlet</servlet-name>
     <url-pattern>/logout</url-pattern>
   </servlet-mapping>
-<!-- Friendship Servlets -->
+
+  <!-- Home Page Servlet (Legacy) -->
   <servlet>
-    <servlet-name>UserSearchServlet</servlet-name>
-    <servlet-class>com.quizwebsite.friendship.UserSearchServlet</servlet-class>
+    <servlet-name>HomePageServlet</servlet-name>
+    <servlet-class>User.HomePageServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>UserSearchServlet</servlet-name>
-    <url-pattern>/searchUsers</url-pattern>
+    <servlet-name>HomePageServlet</servlet-name>
+    <url-pattern>/home</url-pattern>
   </servlet-mapping>
 
+  <!-- QuizList Servlet -->
   <servlet>
-    <servlet-name>SendFriendRequestServlet</servlet-name>
-    <servlet-class>com.quizwebsite.friendship.SendFriendRequestServlet</servlet-class>
+    <servlet-name>QuizListServlet</servlet-name>
+    <servlet-class>com.quizwebsite.quiz.QuizListServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>SendFriendRequestServlet</servlet-name>
-    <url-pattern>/sendFriendRequest</url-pattern>
+    <servlet-name>QuizListServlet</servlet-name>
+    <url-pattern>/quizzes</url-pattern>
   </servlet-mapping>
 
+  <!-- QuizController Servlet -->
   <servlet>
-    <servlet-name>ManageFriendRequestServlet</servlet-name>
-    <servlet-class>com.quizwebsite.friendship.ManageFriendRequestServlet</servlet-class>
+    <servlet-name>QuizControllerServlet</servlet-name>
+    <servlet-class>com.quizwebsite.quiz.QuizControllerServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>ManageFriendRequestServlet</servlet-name>
-    <url-pattern>/manageFriendRequest</url-pattern>
+    <servlet-name>QuizControllerServlet</servlet-name>
+    <url-pattern>/quiz/*</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>RemoveFriendServlet</servlet-name>
-    <servlet-class>com.quizwebsite.friendship.RemoveFriendServlet</servlet-class>
-  </servlet>
+  <!-- Default Servlet for Static Resources -->
   <servlet-mapping>
-    <servlet-name>RemoveFriendServlet</servlet-name>
-    <url-pattern>/removeFriend</url-pattern>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/styles/*</url-pattern>
   </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/js/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/css/*</url-pattern>
+  </servlet-mapping>
+
 </web-app>
