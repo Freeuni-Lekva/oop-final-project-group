@@ -1,6 +1,7 @@
 package com.quizwebsite.friendship;
 
-import User.DBConnection;
+import dao.DatabaseConnection;
+import dao.DatabaseSetup;
 import User.User;
 import User.UserDao;
 import org.junit.jupiter.api.AfterEach;
@@ -23,13 +24,14 @@ public class FriendRequestDaoTest {
 
     @BeforeEach
     public void setUp() throws SQLException, ClassNotFoundException {
-        connection = new DBConnection().getConnection();
+        DatabaseSetup.run();
+        connection = DatabaseConnection.getConnection();
         friendRequestDao = new FriendRequestDao();
         userDao = new UserDao();
 
         // Create and register test users
-        testUser1 = new User(0, "testuser1", "password123");
-        testUser2 = new User(0, "testuser2", "password123");
+        testUser1 = new User("testuser1", "password123", "testuser1@example.com");
+        testUser2 = new User("testuser2", "password123", "testuser2@example.com");
 
         userDao.registerUser(testUser1);
         userDao.registerUser(testUser2);

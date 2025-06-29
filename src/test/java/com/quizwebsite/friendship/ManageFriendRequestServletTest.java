@@ -32,15 +32,12 @@ class ManageFriendRequestServletTest {
     @Mock
     private HttpSession session;
 
-    @InjectMocks
     private ManageFriendRequestServlet servlet;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        User currentUser = new User(1, "testuser", "password");
-        when(session.getAttribute("user")).thenReturn(currentUser);
-        when(request.getSession()).thenReturn(session);
+        servlet = new ManageFriendRequestServlet(friendshipService);
     }
 
     @Test
@@ -56,7 +53,7 @@ class ManageFriendRequestServletTest {
         verify(friendshipService).acceptFriendRequest(2);
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(response).sendRedirect(captor.capture());
-        assertTrue(captor.getValue().endsWith("/home"));
+        assertTrue(captor.getValue().endsWith("/friend-requests"));
     }
 
     @Test
@@ -72,6 +69,6 @@ class ManageFriendRequestServletTest {
         verify(friendshipService).rejectFriendRequest(2);
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(response).sendRedirect(captor.capture());
-        assertTrue(captor.getValue().endsWith("/home"));
+        assertTrue(captor.getValue().endsWith("/friend-requests"));
     }
 }

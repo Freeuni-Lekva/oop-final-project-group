@@ -1,9 +1,7 @@
 package com.quizwebsite.friendship;
 
-import com.quizwebsite.friendship.FriendshipService;
-import com.quizwebsite.friendship.SendFriendRequestServlet;
 import User.User;
-
+import User.UserDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -24,6 +22,9 @@ class SendFriendRequestServletTest {
     private FriendshipService friendshipService;
 
     @Mock
+    private UserDao userDao;
+
+    @Mock
     private HttpServletRequest request;
 
     @Mock
@@ -32,29 +33,31 @@ class SendFriendRequestServletTest {
     @Mock
     private HttpSession session;
 
-    @InjectMocks
     private SendFriendRequestServlet servlet;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        servlet = new SendFriendRequestServlet(friendshipService, userDao);
+        User currentUser = new User(1, "testuser", "password");
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("user")).thenReturn(currentUser);
     }
 
     @Test
     void testDoPost() throws Exception {
         // Arrange
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        User currentUser = new User(1, "testuser", "password");
-        when(session.getAttribute("user")).thenReturn(currentUser);
-        when(request.getSession()).thenReturn(session);
         when(request.getParameter("recipientId")).thenReturn("2");
+        User recipient = new User(2, "recipient", "password");
+        when(userDao.getUserById(2)).thenReturn(recipient);
 
         // Act
         servlet.doPost(request, response);
 
         // Assert
         verify(friendshipService).sendFriendRequest(1, 2);
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(response).sendRedirect(captor.capture());
-        assertTrue(captor.getValue().endsWith("/home"));
+        assertTrue(captor.getValue().endsWith("/user-profile?username=recipient"));
     }
 }

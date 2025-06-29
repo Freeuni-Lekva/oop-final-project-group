@@ -32,21 +32,21 @@ class RemoveFriendServletTest {
     @Mock
     private HttpSession session;
 
-    @InjectMocks
     private RemoveFriendServlet servlet;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        servlet = new RemoveFriendServlet(friendshipService);
         User currentUser = new User(1, "testuser", "password");
+        when(request.getSession(false)).thenReturn(session);
         when(session.getAttribute("user")).thenReturn(currentUser);
-        when(request.getSession()).thenReturn(session);
     }
 
     @Test
     void testDoPost() throws Exception {
         // Arrange
-        when(request.getParameter("friendId")).thenReturn("2");
+        when(request.getParameter("profileUserId")).thenReturn("2");
 
         // Act
         servlet.doPost(request, response);
@@ -55,6 +55,6 @@ class RemoveFriendServletTest {
         verify(friendshipService).removeFriend(1, 2);
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(response).sendRedirect(captor.capture());
-        assertTrue(captor.getValue().endsWith("/home"));
+        assertTrue(captor.getValue().endsWith("/friends-list"));
     }
 }
