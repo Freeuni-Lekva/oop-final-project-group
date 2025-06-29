@@ -18,7 +18,17 @@ public class MultipleChoiceDaoTest {
     //Sets up the new quiz for the testing purposes
     @BeforeEach
     public void setUp() throws SQLException {
+        DatabaseSetup.run();
         connection = DatabaseConnection.getConnection();
+
+        // Clear relevant tables before each test
+        try (Statement clearStmt = connection.createStatement()) {
+            clearStmt.execute("DELETE FROM AnswerOptionsMC");
+            clearStmt.execute("DELETE FROM Questions");
+            clearStmt.execute("DELETE FROM Quizzes");
+            clearStmt.execute("DELETE FROM Users");
+        }
+
         PreparedStatement stmt = connection.prepareStatement(
                 "INSERT INTO Users (username, email, password_hash, salt) " +
                         "VALUES ('testuser', 'test@example.com', 'testhash', 'testsalt')",
@@ -66,15 +76,15 @@ public class MultipleChoiceDaoTest {
         int questionId2 = multipleChoiceQuestion2.getQuestionId();
 
         MultipleChoiceQuestion question = (MultipleChoiceQuestion)multipleChoiceDao.getQuestionById(questionId);
-        assertEquals(question, multipleChoiceQuestion);
+        assertEquals(multipleChoiceQuestion, question);
 
         MultipleChoiceQuestion question2 = (MultipleChoiceQuestion)multipleChoiceDao.getQuestionById(questionId2);
-        assertEquals(question2, multipleChoiceQuestion2);
+        assertEquals(multipleChoiceQuestion2, question2);
 
         List<Question> questionList = multipleChoiceDao.getAllQuestions(testQuizId);
         assertEquals(2, questionList.size());
-        assertEquals(question, questionList.get(0));
-        assertEquals(question2, questionList.get(1));
+        assertEquals(multipleChoiceQuestion, questionList.get(0));
+        assertEquals(multipleChoiceQuestion2, questionList.get(1));
     }
 
     //Tests if the functions return false, null, etc. when they fail
