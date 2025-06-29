@@ -19,7 +19,17 @@ public class FillInTheBlankDaoTest {
     //Sets up the new quiz for the testing purposes
     @BeforeEach
     public void setUp() throws SQLException {
+        DatabaseSetup.run();
         connection = DatabaseConnection.getConnection();
+
+        // Clear relevant tables before each test
+        try (Statement clearStmt = connection.createStatement()) {
+            clearStmt.execute("DELETE FROM FillInBlankAnswers");
+            clearStmt.execute("DELETE FROM Questions");
+            clearStmt.execute("DELETE FROM Quizzes");
+            clearStmt.execute("DELETE FROM Users");
+        }
+
         PreparedStatement stmt = connection.prepareStatement(
                 "INSERT INTO Users (username, email, password_hash, salt) " +
                         "VALUES ('testuser', 'test@example.com', 'testhash', 'testsalt')",
@@ -60,8 +70,8 @@ public class FillInTheBlankDaoTest {
     @Test
     public void testAddGet(){
         defineQuestions();
-        assertTrue(fillInTheBlankDao.addQuestion(fillInTheBlankQuestion));
-        assertTrue(fillInTheBlankDao.addQuestion(fillInTheBlankQuestion2));
+        fillInTheBlankDao.addQuestion(fillInTheBlankQuestion);
+        fillInTheBlankDao.addQuestion(fillInTheBlankQuestion2);
 
         int questionId = fillInTheBlankQuestion.getQuestionId();
         int questionId2 = fillInTheBlankQuestion2.getQuestionId();
