@@ -11,7 +11,7 @@ import java.util.Map;
  * Data access object for multiple choice questions.
  * Handles database operations for questions with predefined options
  * where users select from available choices.
- * Uses the "AnswerOptions" table to store options with
+ * Uses the "AnswerOptionsMC" table to store options with
  * their correctness flags.
  */
 
@@ -20,7 +20,7 @@ public class MultipleChoiceDao extends AbstractQuestionDao {
     @Override
     protected Object getAnswersFromDB(Connection connection, int questionId) throws SQLException {
         Map<String, Boolean> options = new HashMap<>();
-        try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM AnswerOptions WHERE question_id = ?")){
+        try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM AnswerOptionsMC WHERE question_id = ?")){
             preparedStatement.setInt(1, questionId);
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 while (resultSet.next()) {
@@ -37,7 +37,7 @@ public class MultipleChoiceDao extends AbstractQuestionDao {
     protected void insertAnswersIntoDB(int questionId, Question question, Connection connection) throws SQLException {
         MultipleChoiceQuestion multipleChoiceQuestion = (MultipleChoiceQuestion)question;
         Map<String, Boolean> options = multipleChoiceQuestion.getOptions();
-        String query = "INSERT INTO AnswerOptions (question_id, option_text, is_correct) VALUES (?, ?, ?)";
+        String query = "INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (?, ?, ?)";
         try(PreparedStatement preparedStatement = connection.prepareStatement(query)){
             for(String answer : options.keySet()) {
                 preparedStatement.setInt(1, questionId);
@@ -55,6 +55,6 @@ public class MultipleChoiceDao extends AbstractQuestionDao {
 
     @Override
     protected String getAnswerTableName() {
-        return "AnswerOptions";
+        return "AnswerOptionsMC";
     }
 }

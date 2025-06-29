@@ -32,7 +32,9 @@ public class QuizDao {
                     }
                 }
             }
-        }catch(SQLException e){
+        } catch (SQLIntegrityConstraintViolationException e) {
+            return false;
+        } catch(SQLException e){
             e.printStackTrace();
             return false;
         }
@@ -62,9 +64,26 @@ public class QuizDao {
             preparedStatement.setInt(1, quizId);
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 if (resultSet.next()) {
-                    return getQuizFromResultSet(resultSet, quizId);
-                }
-            } return null;
+                   Quiz quiz = getQuizFromResultSet(resultSet, quizId);
+                   // Now, fetch the questions for this quiz
+                   List<models.Question> questions = new ArrayList<>();
+                   String questionsQuery = "SELECT question_id, question_type FROM Questions WHERE quiz_id = ?";
+                   try (PreparedStatement questionsStmt = connection.prepareStatement(questionsQuery)) {
+                       questionsStmt.setInt(1, quizId);
+                       try (ResultSet questionsRs = questionsStmt.executeQuery()) {
+                           while (questionsRs.next()) {
+                               int questionId = questionsRs.getInt("question_id");
+                               String questionTypeStr = questionsRs.getString("question_type");
+                               AbstractQuestionDao questionDao = factory.QuestionDaoFactory.getDao(questionTypeStr);
+                               questions.add(questionDao.getQuestionById(questionId));
+                           }
+                       }
+                   }
+                   quiz.setQuestions(questions);
+                   return quiz;
+               }
+           }
+           return null;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

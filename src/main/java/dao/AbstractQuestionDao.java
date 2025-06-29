@@ -48,10 +48,14 @@ public abstract class AbstractQuestionDao {
      * @return returns boolean indicating if insertion was successful or not
      */
     public final boolean addQuestion(Question question) {
-        try(Connection connection = DatabaseConnection.getConnection()){
-            int questionId = executeInsertQuestion(question, connection);
-            insertAnswersIntoDB(questionId, question, connection);
-        }catch(SQLException e){
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            if (!executeInsertQuestion(question, connection)) {
+                return false;
+            }
+            insertAnswersIntoDB(question.getQuestionId(), question, connection);
+        } catch (SQLIntegrityConstraintViolationException e) {
+            return false;
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
@@ -62,24 +66,25 @@ public abstract class AbstractQuestionDao {
      * Inserts the question to the database, accepts question and an active database connection as parameters.
      * Returns the questionId of an inserted question (it gets assigned by the database)
      */
-    private int executeInsertQuestion(Question question, Connection connection) throws SQLException {
+    private boolean executeInsertQuestion(Question question, Connection connection) throws SQLException {
         String query = "INSERT INTO Questions (quiz_id, question_text, question_type, image_url, order_in_quiz) VALUES (?, ?, ?, ?, ?)";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, question.getQuizId());
             preparedStatement.setString(2, question.getQuestionText());
             preparedStatement.setString(3, question.getQuestionType());
             preparedStatement.setString(4, question.getImageUrl());
             preparedStatement.setInt(5, question.getOrderInQuiz());
-            preparedStatement.executeUpdate();
+            int rows = preparedStatement.executeUpdate();
+            if (rows == 0) {
+                return false;
+            }
             try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                int questionId = 0;
                 if (resultSet.next()) {
-                    questionId = resultSet.getInt(1);
-                    question.setQuestionId(questionId);
-                }else{
-                    throw new SQLException("Failed to get generated question ID");
+                    question.setQuestionId(resultSet.getInt(1));
+                    return true;
+                } else {
+                    return false;
                 }
-                return questionId;
             }
         }
     }
@@ -90,22 +95,26 @@ public abstract class AbstractQuestionDao {
      * @return returns boolean indicating if the operation was successful or not
      */
     public final boolean updateQuestion(Question question) {
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "UPDATE Questions SET question_text = ?, question_type = ?, order_in_quiz = ? WHERE question_id = ?");
-            PreparedStatement preparedStatement2 = connection.prepareStatement("DELETE FROM " + getAnswerTableName() +
-                    " WHERE question_id = ?")){
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE Questions SET question_text = ?, question_type = ?, order_in_quiz = ? WHERE question_id = ?");
+             PreparedStatement preparedStatement2 = connection.prepareStatement("DELETE FROM " + getAnswerTableName() +
+                     " WHERE question_id = ?")) {
             preparedStatement.setString(1, question.getQuestionText());
             preparedStatement.setString(2, question.getQuestionType());
             preparedStatement.setInt(3, question.getOrderInQuiz());
             preparedStatement.setInt(4, question.getQuestionId());
-            preparedStatement.executeUpdate();
-
+            int rows = preparedStatement.executeUpdate();
+            if (rows == 0) {
+                return false;
+            }
             preparedStatement2.setInt(1, question.getQuestionId());
             preparedStatement2.executeUpdate();
             insertAnswersIntoDB(question.getQuestionId(), question, connection);
             return true;
-        }catch(SQLException e){
+        } catch (SQLIntegrityConstraintViolationException e) {
+            return false;
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

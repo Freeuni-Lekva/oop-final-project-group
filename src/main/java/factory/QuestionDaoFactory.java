@@ -20,6 +20,7 @@ public class QuestionDaoFactory {
         switch(questionType) {
             case "MULTIPLE_CHOICE": return new MultipleChoiceDao();
             case "FILL_IN_BLANK": return new FillInTheBlankDao();
+            case "MULTI_ANSWER_UNORDERED": return new dao.MultiAnswerDao();
 //            case "QUESTION_RESPONSE": return new QuestionResponseDao();
 //            case "PICTURE_RESPONSE": return new PictureResponseDao();
             default: throw new IllegalArgumentException("Unknown question type: " + questionType);

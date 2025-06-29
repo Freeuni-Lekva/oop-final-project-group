@@ -37,13 +37,18 @@ public class DatabaseConnection {
      * the JDBC driver could not be loaded
      */
     public static Connection getConnection() {
+        return getConnection(true);
+    }
+
+    public static Connection getConnection(boolean includeDbName) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Could not load JDBC driver " + e.getMessage());
         }
         try {
-            return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            String url = includeDbName ? URL : URL.substring(0, URL.lastIndexOf('/'));
+            return DriverManager.getConnection(url, USERNAME, PASSWORD);
         } catch (SQLException e) {
             throw new RuntimeException("Could not establish connection with the database " + e.getMessage());
         }

@@ -1,6 +1,7 @@
 package models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Represents a quiz with configurable settings and properties.
@@ -18,6 +19,7 @@ public class Quiz {
     private QuizDisplayType quizDisplayType;
     private boolean isImmediateCorrection;
     private boolean isPracticeModeEnabled;
+    private List<Question> questions;
 
     /**
      * Default constructor, should be used when the quiz is first created and
@@ -143,6 +145,11 @@ public class Quiz {
         this.creationDate = creationDate;
     }
 
+    public Quiz withCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+        return this;
+    }
+
     public boolean isRandomOrder() {
         return isRandomOrder;
     }
@@ -173,6 +180,14 @@ public class Quiz {
 
     public void setPracticeModeEnabled(boolean isPracticeModeEnabled) {
         this.isPracticeModeEnabled = isPracticeModeEnabled;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 
     /**
