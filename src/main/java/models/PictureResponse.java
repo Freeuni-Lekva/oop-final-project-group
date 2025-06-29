@@ -27,6 +27,13 @@ public class PictureResponse extends Question {
         this.allowedAnswers = allowedAnswers;
     }
 
+    public PictureResponse(int questionId, String questionText, QuestionType questionType, int quizId, int orderInQuiz, HashSet<String> allowedAnswers) {
+        super(questionId, questionText, questionType, quizId, orderInQuiz);
+       this.setImageUrl(null);
+        this.allowedAnswers = allowedAnswers;
+    }
+
+
     @Override
     public List<Boolean> checkAnswers(List<String> userAnswers) {
         List<Boolean> answers = new ArrayList<>();

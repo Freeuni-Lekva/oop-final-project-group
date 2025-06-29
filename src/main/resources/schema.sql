@@ -1,3 +1,5 @@
+
+
 -- Users Table
 DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
@@ -75,7 +77,7 @@ CREATE TABLE AnswerOptionsPR (
                                     option_id INT AUTO_INCREMENT PRIMARY KEY,
                                     question_id INT NOT NULL,
                                     option_text TEXT NOT NULL,
-                                    FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
+                                    FOREIGN KEY (question_id) REFERENCES Questions(question_id) ON DELETE CASCADE
 );
 
 -- UserQuizAttempts Table

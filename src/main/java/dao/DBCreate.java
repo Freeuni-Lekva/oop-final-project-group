@@ -1,3 +1,5 @@
+package dao;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -6,6 +8,12 @@ import java.sql.Statement;
 
 public class DBCreate {
 
+
+    /*
+    * creates the tables based on the given schema
+    * @param connection
+    * @throws IOException and SQLException
+    * */
     public void createDataBase(DBConnection connection )throws IOException, SQLException {
         Statement statement = connection.getConnection().createStatement();
         String filePath = "src/main/resources/schema.sql";
