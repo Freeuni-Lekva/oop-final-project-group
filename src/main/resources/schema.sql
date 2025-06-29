@@ -3,6 +3,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS UserAnswers;
 DROP TABLE IF EXISTS AnswerOptionsMC;
 DROP TABLE IF EXISTS AnswerOptionsPR;
+DROP TABLE IF EXISTS FillInBlankAnswers;
 DROP TABLE IF EXISTS Messages;
 DROP TABLE IF EXISTS FriendRequests;
 DROP TABLE IF EXISTS Friendships;
@@ -87,6 +88,15 @@ CREATE TABLE AnswerOptionsPR (
     option_text TEXT NOT NULL,
     FOREIGN KEY (question_id) REFERENCES Questions(question_id) ON DELETE CASCADE
 );
+-- AnswerOptions Table (for Fill in the Blank)
+CREATE TABLE FillInBlankAnswers (
+    answer_id INT AUTO_INCREMENT PRIMARY KEY,
+    question_id INT NOT NULL,
+    blank_index INT NOT NULL,
+    acceptable_answer TEXT NOT NULL,
+    FOREIGN KEY (question_id) REFERENCES Questions(question_id) ON DELETE CASCADE
+);
+
 
 -- UserQuizAttempts Table
 CREATE TABLE UserQuizAttempts (
@@ -167,4 +177,78 @@ CREATE TABLE Messages (
 -- ('Quiz Machine', 'The user took ten quizzes.'),
 -- ('I am the Greatest', 'The user had the highest score on a quiz.'),
 -- ('Practice Makes Perfect', 'The user took a quiz in practice mode.');
+-- Sample User
+INSERT INTO Users (user_id, username, email, password_hash, salt) VALUES (1, 'testuser', 'test@example.com', 'password', 'salt');
+
+-- Sample Quiz
+INSERT INTO Quizzes (quiz_id, creator_user_id, title, description) VALUES (1, 1, 'Java Basics Quiz', 'A simple quiz to test fundamental Java knowledge.');
+
+-- Sample Questions
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (1, 1, 'What is the default value of a boolean in Java?', 'MULTIPLE_CHOICE', 0);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (2, 1, 'Which keyword is used to define a constant in Java?', 'MULTIPLE_CHOICE', 1);
+
+-- Sample Options for Question 1
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (1, 'true', FALSE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (1, 'false', TRUE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (1, 'null', FALSE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (1, '0', FALSE);
+
+-- Sample Options for Question 2
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (2, 'const', FALSE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (2, 'static', FALSE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (2, 'final', TRUE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (2, 'let', FALSE);
+-- Sample Fill-in-the-Blank Quiz
+INSERT INTO Quizzes (quiz_id, creator_user_id, title, description) VALUES (2, 1, 'Georgian History', 'A fill-in-the-blank quiz about the history of Georgia.');
+
+-- Sample Questions for Fill-in-the-Blank Quiz
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (3, 2, 'The capital of Georgia is _____ and it was founded by _____.', 'FILL_IN_BLANK', 0);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (4, 2, 'The Golden Age of Georgia was during the reign of Queen _____.', 'FILL_IN_BLANK', 1);
+
+-- Sample Answers for Question 3
+INSERT INTO FillInBlankAnswers (question_id, blank_index, acceptable_answer) VALUES (3, 0, 'Tbilisi');
+INSERT INTO FillInBlankAnswers (question_id, blank_index, acceptable_answer) VALUES (3, 1, 'Vakhtang Gorgasali');
+
+-- Sample Answers for Question 4
+INSERT INTO FillInBlankAnswers (question_id, blank_index, acceptable_answer) VALUES (4, 0, 'Tamar');
+INSERT INTO FillInBlankAnswers (question_id, blank_index, acceptable_answer) VALUES (4, 0, 'Thamar');
+
+
+-- Sample Multiple-Choice Quiz (Geography)
+INSERT INTO Quizzes (quiz_id, creator_user_id, title, description) VALUES (3, 1, 'World Capitals', 'Test your knowledge of world capitals.');
+
+-- Sample Questions for Geography Quiz
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (5, 3, 'What is the capital of Canada?', 'MULTIPLE_CHOICE', 0);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (6, 3, 'What is the capital of Australia?', 'MULTIPLE_CHOICE', 1);
+
+-- Sample Options for Question 5
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (5, 'Toronto', FALSE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (5, 'Vancouver', FALSE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (5, 'Ottawa', TRUE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (5, 'Montreal', FALSE);
+
+-- Sample Options for Question 6
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (6, 'Sydney', FALSE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (6, 'Melbourne', FALSE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (6, 'Canberra', TRUE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (6, 'Perth', FALSE);
+-- Sample Multi-Answer Quiz
+INSERT INTO Quizzes (quiz_id, creator_user_id, title, description) VALUES (4, 1, 'European Geography', 'Select all correct options.');
+
+-- Sample Questions for Multi-Answer Quiz
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (7, 4, 'Which of the following are countries in the European Union?', 'MULTI_ANSWER_UNORDERED', 0);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (8, 4, 'Which of these cities are capitals of EU countries?', 'MULTI_ANSWER_UNORDERED', 1);
+
+-- Sample Options for Question 7
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (7, 'Germany', TRUE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (7, 'Switzerland', FALSE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (7, 'France', TRUE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (7, 'Norway', FALSE);
+
+-- Sample Options for Question 8
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (8, 'Paris', TRUE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (8, 'London', FALSE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (8, 'Berlin', TRUE);
+INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (8, 'Zurich', FALSE);
+
 SET FOREIGN_KEY_CHECKS=1;
