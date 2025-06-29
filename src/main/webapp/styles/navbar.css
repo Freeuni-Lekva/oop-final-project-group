@@ -1,0 +1,70 @@
+/*
+ * NAVBAR STYLES
+ * Contains all styles for the main site navigation.
+ * - Sticky positioning and layout
+ * - Logo and navigation link styling
+ * - Responsive hamburger menu
+ */
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-color);
+    padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3); /* 16px 24px */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar__logo {
+    color: white;
+    font-family: var(--font-heading);
+    font-weight: bold;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.navbar__links {
+    display: flex;
+    align-items: center;
+}
+
+.navbar__links a {
+    color: white;
+    text-decoration: none;
+    margin-left: calc(var(--spacing-unit) * 3); /* 24px */
+    transition: opacity 0.3s ease;
+}
+
+.navbar__links a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+/* Responsive Hamburger Menu */
+.navbar__menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.navbar__menu-toggle .bar {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+@media (max-width: 768px) {
+    .navbar__links {
+        display: none;
+        /* Further responsive styles would be needed here */
+    }
+
+    .navbar__menu-toggle {
+        display: flex;
+    }
+}

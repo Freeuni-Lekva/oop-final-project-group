@@ -1,0 +1,92 @@
+/*
+ * QUIZ PAGE STYLES
+ * Contains all styles for the quiz-taking interface.
+ * - Progress bar and timer
+ * - Question card and text
+ * - Answer option states (default, hover, selected, correct, incorrect)
+ */
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--spacing-unit) * 3); /* 24px */
+}
+
+.progress-bar {
+    height: 12px;
+    background-color: var(--border-color);
+    border-radius: 6px;
+    width: 70%;
+    overflow: hidden;
+}
+
+.progress-bar__fill {
+    height: 100%;
+    background-color: var(--accent-color);
+    border-radius: 6px;
+    transition: width 0.5s ease-in-out;
+}
+
+.quiz-timer {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--primary-color);
+}
+
+.quiz-card {
+    background: var(--card-bg-color);
+    padding: calc(var(--spacing-unit) * 4); /* 32px */
+    border-radius: var(--spacing-unit); /* 8px */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: calc(var(--spacing-unit) * 3); /* 24px */
+}
+
+.quiz-card__question {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    margin-bottom: calc(var(--spacing-unit) * 4); /* 32px */
+}
+
+.answer-options-list {
+    list-style: none;
+    padding: 0;
+}
+
+.answer-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: calc(var(--spacing-unit) * 2); /* 16px */
+    margin-bottom: calc(var(--spacing-unit) * 2); /* 16px */
+    border: 2px solid var(--border-color);
+    border-radius: var(--spacing-unit); /* 8px */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: var(--card-bg-color);
+}
+
+.answer-option:hover {
+    border-color: var(--primary-color);
+    background-color: #f0f4ff;
+}
+
+.answer-option.selected {
+    border-color: var(--primary-color);
+    background-color: #e6efff;
+    font-weight: bold;
+}
+
+.answer-option.correct {
+    border-color: var(--accent-color);
+    background-color: #e8f9f1;
+    color: #1a8a53;
+    font-weight: bold;
+}
+
+.answer-option.incorrect {
+    border-color: var(--error-color);
+    background-color: #fdedec;
+    color: #c0392b;
+    font-weight: bold;
+}
