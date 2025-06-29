@@ -1,5 +1,6 @@
 package User;
 
+import dao.DatabaseSetup;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,10 +14,12 @@ public class UserDaoTest {
 
     @BeforeEach
     public void setUp() {
+        DatabaseSetup.run();
         this.userDao = new UserDao();
+        cleanUp();
         try {
-            userDao.registerUser(new User("Patrick","1234"));
-            userDao.registerUser(new User("Molly","1234"));
+            userDao.registerUser(new User("Patrick", "1234", "patrick@example.com"));
+            userDao.registerUser(new User("Molly", "1234", "molly@example.com"));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -25,8 +28,8 @@ public class UserDaoTest {
     @AfterEach
     public void cleanUp() {
         try {
-            userDao.removeUser(new User("Patrick","1234"));
-            userDao.removeUser(new User("Molly","1234"));
+            userDao.removeUser(new User("Patrick", "1234", "patrick@example.com"));
+            userDao.removeUser(new User("Molly", "1234", "molly@example.com"));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

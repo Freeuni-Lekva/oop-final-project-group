@@ -17,8 +17,7 @@ public class LoginListener implements ServletContextListener{
     public void contextInitialized(ServletContextEvent sce) {
         try {
             DBCreate dbCreate = new DBCreate();
-            DBConnection connection = new DBConnection();
-            dbCreate.createDataBase(connection);
+            dbCreate.createDataBase();
             UserDao userDao = new UserDao();
             sce.getServletContext().setAttribute("userDao", userDao);
             FriendshipService friendshipService = new FriendshipService();
