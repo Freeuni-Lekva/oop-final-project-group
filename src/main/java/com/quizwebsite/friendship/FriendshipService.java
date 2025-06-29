@@ -47,4 +47,17 @@ public class FriendshipService {
     public List<FriendRequest> getPendingRequestsForUser(int userId) {
         return friendRequestDao.getPendingRequestsForUser(userId);
     }
+
+    public String getFriendshipStatus(int currentUser, int profileUser) {
+        if (friendshipDao.areFriends(currentUser, profileUser)) {
+            return "FRIENDS";
+        }
+        if (friendRequestDao.hasPendingRequest(currentUser, profileUser)) {
+            return "PENDING_SENT";
+        }
+        if (friendRequestDao.hasPendingRequest(profileUser, currentUser)) {
+            return "PENDING_RECEIVED";
+        }
+        return "NONE";
+    }
 }

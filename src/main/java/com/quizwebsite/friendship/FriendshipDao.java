@@ -1,6 +1,6 @@
 package com.quizwebsite.friendship;
 
-import User.DBConnection;
+import dao.DatabaseConnection;
 import User.User;
 import User.UserDao;
 
@@ -17,7 +17,7 @@ public class FriendshipDao {
     private final UserDao userDao;
 
     public FriendshipDao() {
-        this.connection = new DBConnection().getConnection();
+        this.connection = DatabaseConnection.getConnection();
         this.userDao = new UserDao();
     }
 

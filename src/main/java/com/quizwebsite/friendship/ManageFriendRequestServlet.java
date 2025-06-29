@@ -1,37 +1,36 @@
 package com.quizwebsite.friendship;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
+import com.quizwebsite.friendship.FriendshipService;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
+@WebServlet("/manage-friend-request")
 public class ManageFriendRequestServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    private FriendshipService friendshipService;
 
-    @Override
-    public void init() throws ServletException {
-        this.friendshipService = (FriendshipService) getServletContext().getAttribute("friendshipService");
+    private final FriendshipService friendshipService;
+
+    public ManageFriendRequestServlet() {
+        this.friendshipService = new FriendshipService(new FriendshipDao(), new FriendRequestDao());
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            int requestId = Integer.parseInt(request.getParameter("requestId"));
-            String action = request.getParameter("action");
+    public ManageFriendRequestServlet(FriendshipService friendshipService) {
+        this.friendshipService = friendshipService;
+    }
 
-            if ("accept".equals(action)) {
-                friendshipService.acceptFriendRequest(requestId);
-            } else if ("reject".equals(action)) {
-                friendshipService.rejectFriendRequest(requestId);
-            }
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int requestId = Integer.parseInt(request.getParameter("requestId"));
+        String action = request.getParameter("action");
 
-            response.sendRedirect(request.getContextPath() + "/home");
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid request ID.");
-        } catch (Exception e) {
-            throw new ServletException("Error managing friend request", e);
+        if ("accept".equals(action)) {
+            friendshipService.acceptFriendRequest(requestId);
+        } else if ("reject".equals(action)) {
+            friendshipService.rejectFriendRequest(requestId);
         }
+
+        response.sendRedirect(request.getContextPath() + "/friend-requests");
     }
 }

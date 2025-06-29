@@ -1,6 +1,6 @@
 package com.quizwebsite.friendship;
 
-import User.DBConnection;
+import dao.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ public class FriendRequestDao {
     private final Connection connection;
 
     public FriendRequestDao() {
-        this.connection = new DBConnection().getConnection();
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public void sendFriendRequest(int requesterId, int recipientId) {
@@ -77,5 +77,18 @@ public class FriendRequestDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean hasPendingRequest(int requesterId, int recipientId) {
+        String query = "SELECT 1 FROM FriendRequests WHERE requester_id = ? AND recipient_id = ? AND status = 'pending'";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, requesterId);
+            statement.setInt(2, recipientId);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
