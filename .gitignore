@@ -1,18 +1,12 @@
+# Build files
 target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+*.class
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
+# IDE files
+.idea/
 *.iml
+*.iws
 *.ipr
-
-### Eclipse ###
 .apt_generated
 .classpath
 .factorypath
@@ -20,8 +14,6 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
-### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -30,9 +22,22 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-
-### VS Code ###
 .vscode/
 
-### Mac OS ###
+# OS files
 .DS_Store
+Thumbs.db
+
+# Database
+*.db
+
+# Logs
+*.log
+
+# Config files with sensitive data
+config.properties
+
+# Temp files
+*.tmp
+*.swp
+*~
