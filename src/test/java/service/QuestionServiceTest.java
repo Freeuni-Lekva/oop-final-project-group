@@ -57,7 +57,7 @@ public class QuestionServiceTest {
         multipleChoiceQuestionId = keys.getInt(1);
 
         stmt = connection.prepareStatement(
-                "INSERT INTO AnswerOptions (question_id, option_text, is_correct) VALUES (?, ?, ?)"
+                "INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (?, ?, ?)"
         );
         stmt.setInt(1, multipleChoiceQuestionId);
         stmt.setString(2, "Germany");
@@ -124,6 +124,7 @@ public class QuestionServiceTest {
     public void testError(){
         List<Question> questions = questionService.getAllQuestionsFromQuiz(Integer.MAX_VALUE);
         assertTrue(questions.isEmpty());
+        assertNull(questionService.getQuestionById(Integer.MAX_VALUE));
     }
 
     //Tests empty quiz
@@ -141,5 +142,21 @@ public class QuestionServiceTest {
 
         List<Question> questions = questionService.getAllQuestionsFromQuiz(emptyQuizId);
         assertTrue(questions.isEmpty());
+    }
+
+    //Test getQuestionById method
+    @Test
+    public void testGetQuestionById(){
+        Question retrievedQuestion = questionService.getQuestionById(multipleChoiceQuestionId);
+        assertInstanceOf(MultipleChoiceQuestion.class, retrievedQuestion);
+        assertEquals(multipleChoiceQuestionId, retrievedQuestion.getQuestionId());
+        assertEquals(testQuizId, retrievedQuestion.getQuizId());
+        assertEquals(QUESTION_TEXT_2, retrievedQuestion.getQuestionText());
+
+        Question retrievedQuestion2 = questionService.getQuestionById(fillInBlankQuestionId);
+        assertInstanceOf(FillInTheBlankQuestion.class, retrievedQuestion2);
+        assertEquals(fillInBlankQuestionId, retrievedQuestion2.getQuestionId());
+        assertEquals(testQuizId, retrievedQuestion2.getQuizId());
+        assertEquals(QUESTION_TEXT_1, retrievedQuestion2.getQuestionText());
     }
 }
