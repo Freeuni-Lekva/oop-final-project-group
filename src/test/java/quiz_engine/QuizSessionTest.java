@@ -100,7 +100,7 @@ public class QuizSessionTest {
 
         //Creates answers to the first multiple choice question
         stmt = connection.prepareStatement(
-                "INSERT INTO AnswerOptions (question_id, option_text, is_correct) VALUES (?, ?, ?)"
+                "INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (?, ?, ?)"
         );
         stmt.setInt(1, multipleChoiceQuestionId);
         stmt.setString(2, "Germany");
@@ -146,7 +146,7 @@ public class QuizSessionTest {
 
         //Adds answers to the multiple choice question
         stmt = connection.prepareStatement(
-                "INSERT INTO AnswerOptions (question_id, option_text, is_correct) VALUES (?, ?, ?)"
+                "INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (?, ?, ?)"
         );
         stmt.setInt(1, multipleChoiceQuestionId2);
         stmt.setString(2, "Brazil");
