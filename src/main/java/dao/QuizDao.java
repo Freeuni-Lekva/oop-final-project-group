@@ -8,6 +8,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO for Quiz entities.
+ * Handles database operations for quiz management including creation, retrieval,
+ * updating, and deletion of quizzes. Provides methods for quiz validation,
+ * creator verification, and question counting. Supports filtering by creation date
+ * and creator, enabling features like recent quiz listings and user-specific
+ * quiz management.
+ */
 public class QuizDao {
 
     /**
