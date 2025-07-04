@@ -140,6 +140,93 @@ public class QuizAttemptDaoTest {
         assertEquals(quizAttempts3, quizAttemptDao.getQuizAttempts(quizAttempt2.getQuizId()));
     }
 
+    //Testing getTodaysTopPerformers
+    @Test
+    public void testTodaysTopPerformers() throws InterruptedException, SQLException {
+        //Creating "and old attempt"
+        PreparedStatement stmt = connection.prepareStatement(
+                "INSERT INTO UserQuizAttempts (user_id, quiz_id, start_time, end_time, score, time_taken_seconds) " +
+                        "VALUES (?, ?, '2023-01-01 10:00:00', '2023-01-01 11:00:00', 300.0, 3600)");
+        stmt.setInt(1, userId);
+        stmt.setInt(2, quizAttempt.getQuizId());
+        stmt.executeUpdate();
+
+        assertTrue(quizAttemptDao.createAttempt(quizAttempt));
+        Thread.sleep(1000);
+        assertTrue(quizAttemptDao.createAttempt(quizAttempt2));
+        Thread.sleep(1000);
+        QuizAttempt quizAttempt3 = new QuizAttempt(userId, quizAttempt.getQuizId());
+        assertTrue(quizAttemptDao.createAttempt(quizAttempt3));
+
+        //Creating attempts
+        assertTrue(quizAttemptDao.completeAttempt(quizAttempt.getAttemptId(), 50));
+        assertTrue(quizAttemptDao.completeAttempt(quizAttempt2.getAttemptId(), 150));
+        assertTrue(quizAttemptDao.completeAttempt(quizAttempt3.getAttemptId(), 100));
+
+        //Testing getTodaysTopPerformers
+        List<QuizAttempt> todaysTop = quizAttemptDao.getTodaysTopPerformers(quizAttempt.getQuizId());
+        assertEquals(2, todaysTop.size());
+        assertEquals(100, todaysTop.get(0).getScore());
+        assertEquals(50, todaysTop.get(1).getScore());
+
+        //Testing if sorted by start time when Scores are the same
+        assertTrue(quizAttemptDao.completeAttempt(quizAttempt.getAttemptId(), 200));
+        assertTrue(quizAttemptDao.completeAttempt(quizAttempt3.getAttemptId(), 200));
+        List<QuizAttempt> todaysTop2 = quizAttemptDao.getTodaysTopPerformers(quizAttempt.getQuizId());
+        assertEquals(quizAttempt3.getAttemptId(), todaysTop2.get(0).getAttemptId());
+        assertEquals(quizAttempt.getAttemptId(), todaysTop2.get(1).getAttemptId());
+
+        stmt.close();
+    }
+
+    //Testing getRecentPerformers
+    @Test
+    public void testGetRecentPerformers() throws InterruptedException{
+        assertTrue(quizAttemptDao.createAttempt(quizAttempt));
+        Thread.sleep(1000);
+        assertTrue(quizAttemptDao.createAttempt(quizAttempt2));
+        Thread.sleep(1000);
+        QuizAttempt quizAttempt3 = new QuizAttempt(userId, quizAttempt.getQuizId());
+        assertTrue(quizAttemptDao.createAttempt(quizAttempt3));
+
+        //Creating attempts
+        assertTrue(quizAttemptDao.completeAttempt(quizAttempt.getAttemptId(), 70));
+        Thread.sleep(1000);
+        assertTrue(quizAttemptDao.completeAttempt(quizAttempt2.getAttemptId(), 80));
+        Thread.sleep(1000);
+        assertTrue(quizAttemptDao.completeAttempt(quizAttempt3.getAttemptId(), 90));
+
+        //Testing getRecentPerformers ordered by completion time
+        List<QuizAttempt> recent = quizAttemptDao.getRecentPerformers(quizAttempt.getQuizId(), 2);
+        assertEquals(2, recent.size());
+        assertEquals(quizAttempt3.getAttemptId(), recent.get(0).getAttemptId());
+        assertEquals(quizAttempt.getAttemptId(), recent.get(1).getAttemptId());
+
+        //Testing limit
+        List<QuizAttempt> recent2 = quizAttemptDao.getRecentPerformers(quizAttempt.getQuizId(), 1);
+        assertEquals(1, recent2.size());
+        assertEquals(quizAttempt3.getAttemptId(), recent2.get(0).getAttemptId());
+    }
+
+    //Testing getUserHistory
+    @Test
+    public void testGetUserQuizHistory() throws InterruptedException{
+        assertTrue(quizAttemptDao.createAttempt(quizAttempt));
+        Thread.sleep(1000);
+        QuizAttempt quizAttempt3 = new QuizAttempt(userId, quizAttempt.getQuizId());
+        assertTrue(quizAttemptDao.createAttempt(quizAttempt3));
+
+        //adding attempts
+        assertTrue(quizAttemptDao.completeAttempt(quizAttempt.getAttemptId(), 60));
+        assertTrue(quizAttemptDao.completeAttempt(quizAttempt3.getAttemptId(), 75));
+
+        //Tests the method and sorting
+        List<QuizAttempt> userHistory = quizAttemptDao.getUserQuizHistory(userId, quizAttempt.getQuizId());
+        assertEquals(2, userHistory.size());
+        assertEquals(quizAttempt3.getAttemptId(), userHistory.get(0).getAttemptId());
+        assertEquals(quizAttempt.getAttemptId(), userHistory.get(1).getAttemptId());
+    }
+
     //Test invalid quiz attempt state while inserting
     @Test
     public void testIllegalAttemptState(){
@@ -188,5 +275,16 @@ public class QuizAttemptDaoTest {
         //Testing getQuizAttempts
         List<QuizAttempt> emptyQuizList = quizAttemptDao.getQuizAttempts(Integer.MAX_VALUE);
         assertTrue(emptyQuizList.isEmpty());
+
+        //Testing getTodaysTopPerformers
+        List<QuizAttempt> quizAttempts = quizAttemptDao.getTodaysTopPerformers(Integer.MAX_VALUE);
+
+        //Testing getRecentPerformers
+        List<QuizAttempt> emptyRecentList = quizAttemptDao.getRecentPerformers(Integer.MAX_VALUE, 5);
+        assertTrue(emptyRecentList.isEmpty());
+
+        //Testing getUserQuizHistory
+        List<QuizAttempt> emptyHistoryList = quizAttemptDao.getUserQuizHistory(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        assertTrue(emptyHistoryList.isEmpty());
     }
 }

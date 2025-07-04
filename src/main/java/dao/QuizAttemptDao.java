@@ -10,6 +10,8 @@ import java.util.List;
  * Handles database operations for managing user quiz attempts including
  * creation, completion, and retrieval. Manages the lifecycle of quiz attempts
  * from when a user starts taking a quiz until they complete it.
+ * Provides methods for generating leaderboards, performance tracking, and
+ * quiz history analysis across different time periods and user contexts.
  * Uses the "UserQuizAttempts" table to store attempt records with timing
  * and scoring information for quiz history and performance tracking.
  */
@@ -147,6 +149,69 @@ public class QuizAttemptDao {
                 return getUserAttempts(resultSet);
             }
         }catch(SQLException e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Retrieves top performers for a specific quiz within the last 24 hours.
+     * Results are ordered by score descending, then by time_taken_seconds ascending.
+     * @param quizId the ID of the quiz
+     * @return list of QuizAttempt objects from last 24 hours, ordered by performance
+     */
+    public List <QuizAttempt> getTodaysTopPerformers(int quizId){
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM UserQuizAttempts WHERE quiz_id = ? AND " +
+                    "start_time >= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND end_time IS NOT NULL " +
+                    "ORDER BY score DESC, time_taken_seconds")){
+            preparedStatement.setInt(1, quizId);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                return getUserAttempts(resultSet);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Retrieves recent quiz attempts regardless of score (chronological order).
+     * @param quizId the ID of the quiz
+     * @param limit maximum number of recent attempts to return
+     * @return list of recent QuizAttempt objects ordered by most recent first
+     */
+    public List<QuizAttempt>getRecentPerformers(int quizId, int limit){
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM UserQuizAttempts WHERE quiz_id = ? AND end_time IS NOT NULL " +
+                    "ORDER BY end_time DESC LIMIT ?")){
+            preparedStatement.setInt(1, quizId);
+            preparedStatement.setInt(2, limit);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                return getUserAttempts(resultSet);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Retrieves a specific user's history on a specific quiz.
+     * @param userId the ID of the user
+     * @param quizId the ID of the quiz
+     * @return list of user's attempts on this quiz, ordered by most recent first
+     */
+    public List<QuizAttempt>getUserQuizHistory(int userId, int quizId){
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM UserQuizAttempts WHERE user_id = ? AND quiz_id = ? " +
+                    "ORDER BY start_time DESC")){
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, quizId);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                return getUserAttempts(resultSet);
+            }
+        }catch (SQLException e){
             e.printStackTrace();
             return new ArrayList<>();
         }
