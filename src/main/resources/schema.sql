@@ -53,7 +53,7 @@ CREATE TABLE Quizzes (
     creator_user_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    creation_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     is_random_order BOOLEAN DEFAULT FALSE,
     display_type ENUM('SINGLE_PAGE', 'MULTI_PAGE_QUESTION') DEFAULT 'SINGLE_PAGE',
     is_immediate_correction BOOLEAN DEFAULT FALSE,
@@ -105,7 +105,7 @@ CREATE TABLE UserQuizAttempts (
     quiz_id INT NOT NULL,
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP,
-    score INT,
+    score DOUBLE,
     time_taken_seconds INT,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (quiz_id) REFERENCES Quizzes(quiz_id) ON DELETE CASCADE
