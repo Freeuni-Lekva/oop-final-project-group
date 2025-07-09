@@ -20,7 +20,7 @@ public class QuizSession {
     private final List<Question> questions;
     private int currentQuestion;
     private Map<Integer, List<String>> answers;
-    private Timestamp startTime;
+    private final Timestamp startTime;
     private final int attemptId;
     private final QuestionService questionService;
 
@@ -100,7 +100,7 @@ public class QuizSession {
     /**
      * lets user submit their answers to the question
      * @param questionOrder for example, 5 for the fifth question
-     * @param answer
+     * @param answer User's submitted answers for these question
      */
     public void submitAnswer(int questionOrder, List<String> answer){
         answers.put(questionOrder, answer);
@@ -137,8 +137,13 @@ public class QuizSession {
     /**
      * moves to the previous question by decrementing current question
      * @throws IndexOutOfBoundsException if there is no previous question
+     * @throws IllegalStateException if user tries to go back when going back is not
+     * allowed for this quiz type
      */
     public void moveToPreviousQuestion(){
+        if (!canGoBack()) {
+            throw new IllegalStateException("Going back is not allowed for this quiz type");
+        }
         if(hasPreviousQuestion()){
             currentQuestion--;
         }else{
@@ -168,8 +173,15 @@ public class QuizSession {
     /**
      * moves to the question specified by the user
      * @throws IndexOutOfBoundsException if there is no question with that questionOrder
+     * @throws IllegalStateException if user tries to go back when going back is not
+     * allowed for this quiz type
      */
     public void moveToQuestion(int questionOrder) {
+        if(questionOrder < currentQuestion){
+            if(!canGoBack()){
+                throw new IllegalStateException("Going back is not allowed for this quiz type");
+            }
+        }
         if(questionOrder < 0 || questionOrder >= questions.size()){
             throw new IndexOutOfBoundsException("This question does not exist");
         }else{

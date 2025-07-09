@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Service class responsible for loading questions from the database across different question types.
- * Provides a unified interface for retrieving all questions belonging to a quiz,
+ * Provides a unified interface for retrieving all questions belonging to a quiz or individual questions,
  * regardless of their specific question type implementations, which makes polymorphism easy.
  * Uses the Factory pattern to delegate to appropriate DAOs for each question type.
  */
@@ -39,6 +39,29 @@ public class QuestionService {
         }catch(SQLException e){
             e.printStackTrace();
             return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Retrieves a single question by its ID.
+     * Uses the factory pattern to get the appropriate DAO for the question type.
+     * @param questionId the ID of the question to retrieve
+     * @return the Question object if found, null otherwise
+     */
+    public Question getQuestionById(int questionId) {
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("SELECT question_type FROM Questions WHERE question_id = ?")) {
+            stmt.setInt(1, questionId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String questionType = rs.getString("question_type");
+                AbstractQuestionDao dao = QuestionDaoFactory.getDao(questionType);
+                return dao.getQuestionById(questionId);
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
