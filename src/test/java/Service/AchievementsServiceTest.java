@@ -1,6 +1,7 @@
-package dao;
+package Service;
 
-import model.Achievements;
+import dao.AchievementsDao;
+import dao.DBConnection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AchievementsDaoTest {
+class AchievementsServiceTest {
+
     AchievementsDao achievementsDao;
     private DBConnection dbConnection;
     private List<Integer> userIds;
@@ -169,50 +171,20 @@ class AchievementsDaoTest {
     }
 
     @Test
-    public void getQuizCreatedByUserTest() throws SQLException {
-        assertEquals(0 ,achievementsDao.getCreatedCount(userIds.get(0)));
-        assertEquals(1 ,achievementsDao.getCreatedCount(userIds.get(1)));
-        assertEquals(5 ,achievementsDao.getCreatedCount(userIds.get(2)));
-        assertEquals(10 ,achievementsDao.getCreatedCount(userIds.get(3)));
-    }
+    public void giveAchievementsTest(){
+        AchievementsService service = new AchievementsService();
 
 
-    @Test
-    public void getUserAttemptsTest() throws SQLException {
-        assertEquals(3 ,achievementsDao.getAttemptCount(userIds.get(0)));
-        assertEquals(0 ,achievementsDao.getAttemptCount(userIds.get(1)));
-        assertEquals(16 ,achievementsDao.getAttemptCount(userIds.get(2)));
-        assertEquals(0 ,achievementsDao.getAttemptCount(userIds.get(3)));
-    }
+        service.giveAchievements(userIds.get(1));
+        service.giveAchievements(userIds.get(2));
+        service.giveAchievements(userIds.get(3));
+        service.giveAchievements(userIds.get(0));
 
-    @Test
-    public void insertAndHasAchievementTest() throws SQLException {
-        Achievements achievement = new Achievements(1, "Amateur Author", "The user created a quiz.", "/iconUrl" );
-        assertTrue(achievementsDao.giveAchievementToUser(userIds.get(0), achievement));
-
-        assertTrue(achievementsDao.userHasAchievement(userIds.get(0),1));
-        assertFalse(achievementsDao.userHasAchievement(userIds.get(0),2));
-        assertFalse(achievementsDao.userHasAchievement(userIds.get(1),1));
-
-    }
-
-    @Test
-    public void getAchievementByName() throws SQLException {
-        Achievements achievement = achievementsDao.getAchievementByName("Amateur Author");
-        assertTrue(achievement.getName().equals("Amateur Author"));
-        assertTrue(achievement.getDescription().equals("The user created a quiz."));
-    }
-
-    @Test
-    public void getAchievementListTest() throws SQLException {
-        Achievements achievement1 =  achievementsDao.getAchievementByName("Amateur Author");
-        assertTrue(achievementsDao.giveAchievementToUser(userIds.get(0), achievement1));
-        Achievements achievement2 = achievementsDao.getAchievementByName("Quiz Machine");
-        assertTrue(achievementsDao.giveAchievementToUser(userIds.get(0), achievement2));
-
-        List<Achievements> achievements = achievementsDao.getUserAchievementList(userIds.get(0));
-        assertTrue(achievements.contains(achievement1));
-        assertTrue(achievements.contains(achievement2));
+        assertTrue(achievementsDao.userHasAchievement(userIds.get(1), achievementsDao.getAchievementByName("Amateur Author").getId()));
+        assertTrue(achievementsDao.userHasAchievement(userIds.get(2), achievementsDao.getAchievementByName("Prolific Author").getId()));
+        assertTrue(achievementsDao.userHasAchievement(userIds.get(3), achievementsDao.getAchievementByName("Prodigious Author").getId()));
+        assertFalse(achievementsDao.userHasAchievement(userIds.get(0), achievementsDao.getAchievementByName("Quiz Machine").getId()));
+        assertTrue(achievementsDao.userHasAchievement(userIds.get(2), achievementsDao.getAchievementByName("Quiz Machine").getId()));
     }
 
 }

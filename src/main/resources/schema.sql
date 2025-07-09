@@ -151,10 +151,10 @@ CREATE TABLE UserAchievements (
 -- );
 
 -- Initial data for Achievements
--- INSERT INTO Achievements (name, description) VALUES
--- ('Amateur Author', 'The user created a quiz.'),
--- ('Prolific Author', 'The user created five quizzes.'),
--- ('Prodigious Author', 'The user created ten quizzes.'),
--- ('Quiz Machine', 'The user took ten quizzes.'),
+ INSERT INTO Achievements (name, description) VALUES
+ ('Amateur Author', 'The user created a quiz.'),
+ ('Prolific Author', 'The user created five quizzes.'),
+ ('Prodigious Author', 'The user created ten quizzes.'),
+ ('Quiz Machine', 'The user took ten quizzes.')
 -- ('I am the Greatest', 'The user had the highest score on a quiz.'),
 -- ('Practice Makes Perfect', 'The user took a quiz in practice mode.');
