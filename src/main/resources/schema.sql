@@ -120,24 +120,24 @@ CREATE TABLE Messages (
     FOREIGN KEY (related_quiz_id) REFERENCES Quizzes(quiz_id) ON DELETE SET NULL
 );
 
--- Achievements Table
--- CREATE TABLE Achievements (
---     achievement_id INT AUTO_INCREMENT PRIMARY KEY,
---     name VARCHAR(100) NOT NULL UNIQUE,
---     description TEXT NOT NULL,
---     icon_url VARCHAR(255)
--- );
+# Achievements Table
+CREATE TABLE Achievements (
+    achievement_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT NOT NULL,
+    icon_url VARCHAR(255)
+);
 
--- UserAchievements Table
--- CREATE TABLE UserAchievements (
---     user_achievement_id INT AUTO_INCREMENT PRIMARY KEY,
---     user_id INT NOT NULL,
---     achievement_id INT NOT NULL,
---     earned_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
---     FOREIGN KEY (achievement_id) REFERENCES Achievements(achievement_id) ON DELETE CASCADE,
---     UNIQUE (user_id, achievement_id)
--- );
+# UserAchievements Table
+CREATE TABLE UserAchievements (
+    user_achievement_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    achievement_id INT NOT NULL,
+    earned_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (achievement_id) REFERENCES Achievements(achievement_id) ON DELETE CASCADE,
+    UNIQUE (user_id, achievement_id)
+);
 
 -- Announcements Table
 -- CREATE TABLE Announcements (
