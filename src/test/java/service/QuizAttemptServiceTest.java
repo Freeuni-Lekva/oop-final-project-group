@@ -29,7 +29,7 @@ public class QuizAttemptServiceTest {
         // Create test user
         PreparedStatement stmt = connection.prepareStatement(
                 "INSERT INTO Users (username, email, password_hash, salt) " +
-                        "VALUES ('testuser', 'test@example.com', 'testhash', 'testsalt')",
+                        "VALUES ('newtestuser', 'newtest@example.com', 'testhash', 'testsalt')",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.executeUpdate();
