@@ -37,7 +37,7 @@ public class QuestionServiceTest {
 
         stmt = connection.prepareStatement(
                 "INSERT INTO Quizzes (creator_user_id, title) " +
-                        "SELECT user_id, 'Test Quiz' FROM Users WHERE username = 'testuser'",
+                        "SELECT user_id, 'Test Quiz' FROM Users WHERE username = 'newtestuser'",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.executeUpdate();
