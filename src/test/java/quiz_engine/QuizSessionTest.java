@@ -4,8 +4,8 @@ import dao.DatabaseConnection;
 import dao.QuizDao;
 import models.Question;
 import models.Quiz;
+import models.QuizAttempt;
 import org.junit.jupiter.api.*;
-import service.QuestionService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.*;
@@ -20,7 +20,6 @@ public class QuizSessionTest {
     private Quiz quiz2;
     private QuizSession quizSession;
     private QuizSession quizSession2;
-    private List<Question> questions;
 
     private static final int ATTEMPT_ONE = 1;
     private static final int ATTEMPT_ONE_THOUSAND = 1001;
@@ -73,12 +72,8 @@ public class QuizSessionTest {
         QuizDao quizDao = new QuizDao();
         quiz = quizDao.getQuizById(testQuizId);
         quiz2 = quizDao.getQuizById(testQuizId2);
-        quizSession = new QuizSession(quiz, ATTEMPT_ONE);
-        quizSession2 = new QuizSession(quiz2, ATTEMPT_ONE_THOUSAND);
-
-        //Initializes the questions
-        QuestionService questionService = new QuestionService();
-        questions = questionService.getAllQuestionsFromQuiz(testQuizId);
+        quizSession = new QuizSession(userId, testQuizId);
+        quizSession2 = new QuizSession(userId, testQuizId2);
 
         keys.close();
         stmt.close();
@@ -168,14 +163,16 @@ public class QuizSessionTest {
         connection.close();
     }
 
+    //Tests getters and setters
     @Test
     public void testGettersAndSetters() {
         assertEquals(quiz, quizSession.getQuiz());
         assertEquals(quiz2, quizSession2.getQuiz());
+        List<Question> questions = quizSession.getQuestions();
         assertEquals(questions, quizSession.getQuestions());
         assertNotSame(questions, quizSession.getQuestions());
-        assertEquals(ATTEMPT_ONE, quizSession.getAttemptId());
-        assertEquals(ATTEMPT_ONE_THOUSAND, quizSession2.getAttemptId());
+        assertTrue(quizSession.getAttemptId() > 0);
+        assertTrue(quizSession2.getAttemptId() > 0);
         assertEquals(0, quizSession.getCurrentQuestionId());
         assertEquals(0, quizSession2.getCurrentQuestionId());
         assertEquals("Question 1 of 3", quizSession.getQuizProgress());
@@ -290,15 +287,15 @@ public class QuizSessionTest {
         assertFalse(quizSession.isQuizFinished());
         List<String> answers = new ArrayList<>();
         answers.add("Germany");
-        quizSession.submitAnswer(0, answers);
+        assertTrue(quizSession.submitAnswer(0, answers));
         assertFalse(quizSession.isQuizFinished());
         List<String> answers2 = new ArrayList<>();
         answers2.add("Brazil");
-        quizSession.submitAnswer(2, answers2);
+        assertTrue(quizSession.submitAnswer(2, answers2));
         assertFalse(quizSession.isQuizFinished());
         List<String> answers3 = new ArrayList<>();
         answers3.add("Tbilisi");
-        quizSession.submitAnswer(1, answers3);
+        assertTrue(quizSession.submitAnswer(1, answers3));
         assertTrue(quizSession.isQuizFinished());
         Map<Integer, List<String> > quizAnswers = quizSession.getAnswers();
         assertEquals(answers, quizAnswers.get(0));
@@ -319,15 +316,118 @@ public class QuizSessionTest {
         ResultSet keys = stmt.getGeneratedKeys();
         keys.next();
         int emptyQuizId = keys.getInt(1);
-        QuizDao quizDao = new QuizDao();
-        Quiz emptyQuiz = quizDao.getQuizById(emptyQuizId);
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> new QuizSession(emptyQuiz, ATTEMPT_ONE)
+                () -> new QuizSession(userId, emptyQuizId)
         );
-        assertEquals("Quiz must have at least one question", exception.getMessage());
+        assertEquals("Quiz has no questions: " + emptyQuizId, exception.getMessage());
 
         keys.close();
         stmt.close();
+    }
+
+    @Test
+    public void testCompleteQuizSuccess() throws InterruptedException {
+        // Submit correct answers
+        List<String> mcAnswers = new ArrayList<>();
+        mcAnswers.add("Germany");
+        assertTrue(quizSession.submitAnswer(0, mcAnswers));
+
+        List<String> fibAnswers = new ArrayList<>();
+        fibAnswers.add("Tbilisi");
+        assertTrue(quizSession.submitAnswer(1, fibAnswers));
+
+        Thread.sleep(100); // Ensure time difference
+
+        QuizAttempt completedAttempt = quizSession.completeQuiz();
+        assertNotNull(completedAttempt);
+        assertEquals(quizSession.getAttemptId(), completedAttempt.getAttemptId());
+        assertEquals(userId, completedAttempt.getUserId());
+        assertEquals(quiz.getQuizId(), completedAttempt.getQuizId());
+        assertNotNull(completedAttempt.getStartTime());
+        assertNotNull(completedAttempt.getEndTime());
+        assertEquals(2.0, completedAttempt.getScore());
+        assertTrue(completedAttempt.getTimeTakenSeconds() > 0);
+    }
+
+    @Test
+    public void testCompleteQuizPartialScore() {
+        // Submit one correct, one incorrect
+        List<String> mcAnswers = new ArrayList<>();
+        mcAnswers.add("Germany"); // Correct
+        assertTrue(quizSession.submitAnswer(0, mcAnswers));
+
+        List<String> fibAnswers = new ArrayList<>();
+        fibAnswers.add("Wrong Answer"); // Incorrect
+        assertTrue(quizSession.submitAnswer(1, fibAnswers));
+
+        QuizAttempt completedAttempt = quizSession.completeQuiz();
+        assertNotNull(completedAttempt);
+        assertEquals(1.0, completedAttempt.getScore());
+    }
+
+    @Test
+    public void testCompleteQuizZeroScore() {
+        // Submit all incorrect answers
+        List<String> mcAnswers = new ArrayList<>();
+        mcAnswers.add("Brazil"); // Incorrect
+        assertTrue(quizSession.submitAnswer(0, mcAnswers));
+
+        List<String> fibAnswers = new ArrayList<>();
+        fibAnswers.add("Wrong Answer"); // Incorrect
+        assertTrue(quizSession.submitAnswer(1, fibAnswers));
+
+        QuizAttempt completedAttempt = quizSession.completeQuiz();
+        assertNotNull(completedAttempt);
+        assertEquals(0.0, completedAttempt.getScore());
+    }
+
+    @Test
+    public void testSubmitNullEmptyAnswers() {
+        // Test null answers
+        assertFalse(quizSession.submitAnswer(0, null));
+
+        // Test empty answers
+        assertFalse(quizSession.submitAnswer(0, new ArrayList<>()));
+    }
+
+    @Test
+    public void testAnswerReplacement() throws SQLException {
+        // Submit initial answer
+        List<String> initialAnswers = new ArrayList<>();
+        initialAnswers.add("Germany");
+        assertTrue(quizSession.submitAnswer(0, initialAnswers));
+
+        // Submit replacement answer
+        List<String> newAnswers = new ArrayList<>();
+        newAnswers.add("Brazil");
+        assertTrue(quizSession.submitAnswer(0, newAnswers));
+
+        // Verify only one answer record exists
+        try (PreparedStatement stmt = connection.prepareStatement(
+                "SELECT COUNT(*) FROM UserAnswers WHERE attempt_id = ? AND question_id = ?")) {
+            stmt.setInt(1, quizSession.getAttemptId());
+            stmt.setInt(2, quizSession.getQuestions().get(0).getQuestionId());
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+            assertEquals(1, rs.getInt(1));
+        }
+    }
+
+    @Test
+    public void testInvalidUserOrQuiz() {
+        // Test invalid quiz ID
+        IllegalArgumentException exception1 = assertThrows(
+                IllegalArgumentException.class,
+                () -> new QuizSession(userId, Integer.MAX_VALUE)
+        );
+        assertEquals("Quiz does not exist: " + Integer.MAX_VALUE, exception1.getMessage());
+
+        // Test invalid user ID
+        IllegalArgumentException exception2 = assertThrows(
+                IllegalArgumentException.class,
+                () -> new QuizSession(Integer.MAX_VALUE, quiz.getQuizId())
+        );
+        assertEquals("User does not exist: " + Integer.MAX_VALUE, exception2.getMessage());
     }
 }
