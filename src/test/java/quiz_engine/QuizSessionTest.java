@@ -31,7 +31,7 @@ public class QuizSessionTest {
         //Creates a user which owns(creates) the quizzes
         PreparedStatement stmt = connection.prepareStatement(
                 "INSERT INTO Users (username, email, password_hash, salt) " +
-                        "VALUES ('testuser', 'test@example.com', 'testhash', 'testsalt')",
+                        "VALUES ('newtestuser', 'newtest@example.com', 'testhash', 'testsalt')",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.executeUpdate();
@@ -80,8 +80,8 @@ public class QuizSessionTest {
     private void addAnswers(int testQuizId) throws SQLException {
         //Creates a multiple choice question for the first quiz
         PreparedStatement stmt = connection.prepareStatement(
-                "INSERT INTO Questions (quiz_id, question_text, question_type, order_in_quiz) " +
-                        "VALUES (?, 'Which countries are in Europe?', 'MULTIPLE_CHOICE', 1)",
+                "INSERT INTO Questions (quiz_id, question_text, question_type, order_in_quiz, max_score) " +
+                        "VALUES (?, 'Which countries are in Europe?', 'MULTIPLE_CHOICE', 1, 1)",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.setInt(1, testQuizId);
@@ -105,8 +105,8 @@ public class QuizSessionTest {
 
         //Creates a fill in the blank question for the first quiz
         stmt = connection.prepareStatement(
-                "INSERT INTO Questions (quiz_id, question_text, question_type, order_in_quiz) " +
-                        "VALUES (?, 'The capital of Georgia is _____.', 'FILL_IN_BLANK', 2)",
+                "INSERT INTO Questions (quiz_id, question_text, question_type, order_in_quiz, max_score) " +
+                        "VALUES (?, 'The capital of Georgia is _____.', 'FILL_IN_BLANK', 2, 1)",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.setInt(1, testQuizId);
@@ -126,8 +126,8 @@ public class QuizSessionTest {
 
         //Creates one more multiple choice question for the first quiz
         stmt = connection.prepareStatement(
-                "INSERT INTO Questions (quiz_id, question_text, question_type, order_in_quiz) " +
-                        "VALUES (?, 'Which countries are not in Europe?', 'MULTIPLE_CHOICE', 3)",
+                "INSERT INTO Questions (quiz_id, question_text, question_type, order_in_quiz, max_score) " +
+                        "VALUES (?, 'Which countries are not in Europe?', 'MULTIPLE_CHOICE', 3, 1)",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.setInt(1, testQuizId);

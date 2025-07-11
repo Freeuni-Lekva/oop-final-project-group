@@ -194,10 +194,10 @@ public class QuizDaoTest {
         HashMap<String, Boolean> answers = new HashMap<>();
         answers.put("true", true);
         answers.put("false", false);
-        Question question = new MultipleChoiceWithMultipleAnswersQuestion("text", answers, quiz.getQuizId(), 1);
+        Question question = new MultipleChoiceWithMultipleAnswersQuestion("text", answers, quiz.getQuizId(), 1, 1);
         MultipleChoiceWithMultipleAnswersDao multipleChoiceWithMultipleAnswersDAo = new MultipleChoiceWithMultipleAnswersDao();
         multipleChoiceWithMultipleAnswersDAo.addQuestion(question);
-        FillInTheBlankQuestion question2 = new FillInTheBlankQuestion("text", new ArrayList<HashSet<String>>(), quiz.getQuizId(), 2);
+        FillInTheBlankQuestion question2 = new FillInTheBlankQuestion("text", new ArrayList<HashSet<String>>(), quiz.getQuizId(), 2, 1);
         FillInTheBlankDao fillInTheBlankDao = new FillInTheBlankDao();
         fillInTheBlankDao.addQuestion(question2);
         assertEquals(2, quizDao.getQuestionCount(quiz.getQuizId()));

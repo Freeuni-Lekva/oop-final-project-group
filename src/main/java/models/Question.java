@@ -15,6 +15,7 @@ public abstract class Question {
     private final int quiz_Id;
     private String imageUrl;
     private Integer orderInQuiz;
+    private double maxScore;
 
     /**
      * Default constructor, should be used when the question is first created and
@@ -24,13 +25,14 @@ public abstract class Question {
      * @param quiz_Id the id of a quiz the question belongs to
      * @param orderInQuiz which N is the question in a quiz
      */
-    public Question(String questionText, QuestionType questionType, int quiz_Id, int orderInQuiz) {
+    public Question(String questionText, QuestionType questionType, int quiz_Id, int orderInQuiz, double maxScore) {
         this.questionText = questionText;
         this.questionType = questionType;
         this.quiz_Id = quiz_Id;
         this.questionId = -1;
         this.imageUrl = null;
         this.orderInQuiz = orderInQuiz;
+        this.maxScore = maxScore;
     }
 
     /**
@@ -41,13 +43,14 @@ public abstract class Question {
      * @param quiz_Id the id of a quiz the question belongs to
      * @param orderInQuiz which N is the question in a quiz
      */
-    public Question(int questionId, String questionText, QuestionType questionType, int quiz_Id, int orderInQuiz) {
+    public Question(int questionId, String questionText, QuestionType questionType, int quiz_Id, int orderInQuiz, double maxScore) {
         this.questionId = questionId;
         this.questionText = questionText;
         this.questionType = questionType;
         this.quiz_Id = quiz_Id;
         this.imageUrl = null;
         this.orderInQuiz = orderInQuiz;
+        this.maxScore = maxScore;
     }
 
     /**
@@ -92,6 +95,12 @@ public abstract class Question {
         return orderInQuiz;
     }
 
+    /**
+     * @return the maximum score that can be achieved answering this question
+     */
+    public double getMaxScore() {
+        return maxScore;
+    }
     /**
      * @param imageUrl the URL of an image to be included in a question
      */

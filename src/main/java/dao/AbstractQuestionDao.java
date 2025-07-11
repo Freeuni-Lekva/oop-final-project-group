@@ -30,8 +30,9 @@ public abstract class AbstractQuestionDao {
                     int quizId = resultSet.getInt("quiz_id");
                     String imageUrl = resultSet.getString("image_url");
                     Integer orderInQuiz = (Integer) resultSet.getObject("order_in_quiz");
+                    double maxScore = resultSet.getDouble("max_score");
                     Object answers = getAnswersFromDB(connection, questionId);
-                    Question question = createQuestionObject(questionId, questionText, answers, quizId, orderInQuiz);
+                    Question question = createQuestionObject(questionId, questionText, answers, quizId, orderInQuiz, maxScore);
                     question.setImageUrl(imageUrl);
                     return question;
                 }
@@ -67,13 +68,14 @@ public abstract class AbstractQuestionDao {
      * Returns the questionId of an inserted question (it gets assigned by the database)
      */
     private boolean executeInsertQuestion(Question question, Connection connection) throws SQLException {
-        String query = "INSERT INTO Questions (quiz_id, question_text, question_type, image_url, order_in_quiz) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Questions (quiz_id, question_text, question_type, image_url, order_in_quiz, max_score) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, question.getQuizId());
             preparedStatement.setString(2, question.getQuestionText());
             preparedStatement.setString(3, question.getQuestionType());
             preparedStatement.setString(4, question.getImageUrl());
             preparedStatement.setInt(5, question.getOrderInQuiz());
+            preparedStatement.setDouble(6, question.getMaxScore());
             int rows = preparedStatement.executeUpdate();
             if (rows == 0) {
                 return false;
@@ -97,13 +99,14 @@ public abstract class AbstractQuestionDao {
     public final boolean updateQuestion(Question question) {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "UPDATE Questions SET question_text = ?, question_type = ?, order_in_quiz = ? WHERE question_id = ?");
+                     "UPDATE Questions SET question_text = ?, question_type = ?, order_in_quiz = ?, max_score = ? WHERE question_id = ?");
              PreparedStatement preparedStatement2 = connection.prepareStatement("DELETE FROM " + getAnswerTableName() +
                      " WHERE question_id = ?")) {
             preparedStatement.setString(1, question.getQuestionText());
             preparedStatement.setString(2, question.getQuestionType());
             preparedStatement.setInt(3, question.getOrderInQuiz());
-            preparedStatement.setInt(4, question.getQuestionId());
+            preparedStatement.setDouble(4, question.getMaxScore());
+            preparedStatement.setInt(5, question.getQuestionId());
             int rows = preparedStatement.executeUpdate();
             if (rows == 0) {
                 return false;
@@ -153,7 +156,8 @@ public abstract class AbstractQuestionDao {
                     Object answers = getAnswersFromDB(connection, questionId);
                     String imageUrl = resultSet.getString("image_url");
                     int orderInQuiz = resultSet.getInt("order_in_quiz");
-                    Question q = createQuestionObject(questionId, questionText, answers, quizId, orderInQuiz);
+                    double maxScore = resultSet.getDouble("max_score");
+                    Question q = createQuestionObject(questionId, questionText, answers, quizId, orderInQuiz, maxScore);
                     q.setImageUrl(imageUrl);
                     questions.add(q);
                 }
@@ -193,7 +197,7 @@ public abstract class AbstractQuestionDao {
      * @param orderInQuiz The N of a question in a quiz
      * @return concrete Question instance
      */
-    protected abstract Question createQuestionObject(int questionId, String questionText, Object answers, int quizId, int orderInQuiz);
+    protected abstract Question createQuestionObject(int questionId, String questionText, Object answers, int quizId, int orderInQuiz, double maxScore);
 
     /**
      * Returns the database table name where this question type stores its answers.

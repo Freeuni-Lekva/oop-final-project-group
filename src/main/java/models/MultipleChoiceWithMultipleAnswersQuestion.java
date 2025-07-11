@@ -15,14 +15,14 @@ public class MultipleChoiceWithMultipleAnswersQuestion extends Question {
     private final Map<String, Boolean> options;
 
 
-    public MultipleChoiceWithMultipleAnswersQuestion(int questionId, String questionText, Map<String, Boolean> options, int quizId, int orderInQuiz) {
-        super(questionId, questionText, QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS, quizId, orderInQuiz);
+    public MultipleChoiceWithMultipleAnswersQuestion(int questionId, String questionText, Map<String, Boolean> options, int quizId, int orderInQuiz, double maxScore) {
+        super(questionId, questionText, QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS, quizId, orderInQuiz, maxScore);
         checkOptionsException(options);
         this.options = options;
     }
 
-    public MultipleChoiceWithMultipleAnswersQuestion(String questionText, Map<String, Boolean> options, int quizId, int orderInQuiz) {
-        super(questionText, QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS, quizId, orderInQuiz);
+    public MultipleChoiceWithMultipleAnswersQuestion(String questionText, Map<String, Boolean> options, int quizId, int orderInQuiz, double maxScore) {
+        super(questionText, QuestionType.MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS, quizId, orderInQuiz, maxScore);
         checkOptionsException(options);
         this.options = options;
     }
@@ -100,7 +100,7 @@ public class MultipleChoiceWithMultipleAnswersQuestion extends Question {
                 return 0.0;
             }
         }
-        return correctAnswersCount / correctAnswers.size();
+        return (correctAnswersCount / correctAnswers.size()) * getMaxScore();
     }
 
     /**

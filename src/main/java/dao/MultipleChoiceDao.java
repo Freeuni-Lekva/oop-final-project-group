@@ -52,8 +52,8 @@ public class MultipleChoiceDao extends AbstractQuestionDao {
     }
 
     @Override
-    protected Question createQuestionObject(int questionId, String questionText, Object answers, int quizId, int orderInQuiz){
-        return new MultipleChoiceQuestion(questionId, questionText, (Map<String, Boolean>)answers, quizId, orderInQuiz);
+    protected Question createQuestionObject(int questionId, String questionText, Object answers, int quizId, int orderInQuiz, double maxScore){
+        return new MultipleChoiceQuestion(questionId, questionText, (Map<String, Boolean>)answers, quizId, orderInQuiz, maxScore);
     }
 
     @Override

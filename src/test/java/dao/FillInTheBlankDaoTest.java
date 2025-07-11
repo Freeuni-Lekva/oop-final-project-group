@@ -102,7 +102,7 @@ public class FillInTheBlankDaoTest {
         answers.get(1).add("Gorgasali");
 
         //addQuestion Test
-        fillInTheBlankQuestion = new FillInTheBlankQuestion(questionText, answers, Integer.MAX_VALUE, 0);
+        fillInTheBlankQuestion = new FillInTheBlankQuestion(questionText, answers, Integer.MAX_VALUE, 0, 2);
         assertFalse(fillInTheBlankDao.addQuestion(fillInTheBlankQuestion));
 
         //getQuestionById Test
@@ -142,7 +142,8 @@ public class FillInTheBlankDaoTest {
                 fillInTheBlankQuestion2.getQuestionText(),
                 fillInTheBlankQuestion2.getCorrectAnswers(),
                 fillInTheBlankQuestion2.getQuizId(),
-                fillInTheBlankQuestion2.getOrderInQuiz());
+                fillInTheBlankQuestion2.getOrderInQuiz(),
+                fillInTheBlankQuestion2.getMaxScore());
         assertTrue(fillInTheBlankDao.updateQuestion(fillInTheBlankQuestion));
         Question q = fillInTheBlankDao.getQuestionById(fillInTheBlankQuestion.getQuestionId());
         assertEquals(fillInTheBlankQuestion, q);
@@ -158,7 +159,7 @@ public class FillInTheBlankDaoTest {
         answers.get(1).add("Vakhtang Gorgasali");
         answers.get(1).add("Vakhtang I Gorgasali");
         answers.get(1).add("Gorgasali");
-        fillInTheBlankQuestion = new FillInTheBlankQuestion(questionText, answers, testQuizId, 0);
+        fillInTheBlankQuestion = new FillInTheBlankQuestion(questionText, answers, testQuizId, 0, 1);
 
         String questionText2 = "The Sun rises in the _____ and sets in the _____.";
         ArrayList<HashSet<String>> answers2 = new ArrayList<>();
@@ -168,6 +169,6 @@ public class FillInTheBlankDaoTest {
         answers2.get(0).add("East");
         answers2.get(1).add("West");
         answers2.get(1).add("west");
-        fillInTheBlankQuestion2 = new FillInTheBlankQuestion(questionText2, answers2, testQuizId, 1);
+        fillInTheBlankQuestion2 = new FillInTheBlankQuestion(questionText2, answers2, testQuizId, 1, 2);
     }
 }

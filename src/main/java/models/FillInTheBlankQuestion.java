@@ -19,13 +19,13 @@ public class FillInTheBlankQuestion extends Question {
      */
     private final List<HashSet<String>> answersList;
 
-    public FillInTheBlankQuestion(int questionId, String questionText, List<HashSet<String>> answers, int quizId, int orderInQuiz) {
-        super(questionId, questionText, QuestionType.FILL_IN_BLANK, quizId, orderInQuiz);
+    public FillInTheBlankQuestion(int questionId, String questionText, List<HashSet<String>> answers, int quizId, int orderInQuiz, double maxScore) {
+        super(questionId, questionText, QuestionType.FILL_IN_BLANK, quizId, orderInQuiz, maxScore);
         this.answersList = answers;
     }
 
-    public FillInTheBlankQuestion(String questionText, List<HashSet<String>> answers, int quizId, int orderInQuiz) {
-        super(questionText, QuestionType.FILL_IN_BLANK, quizId, orderInQuiz);
+    public FillInTheBlankQuestion(String questionText, List<HashSet<String>> answers, int quizId, int orderInQuiz, int maxScore) {
+        super(questionText, QuestionType.FILL_IN_BLANK, quizId, orderInQuiz, maxScore);
         this.answersList = answers;
     }
 
@@ -56,7 +56,7 @@ public class FillInTheBlankQuestion extends Question {
     @Override
     public double calculateScore(List<String> userAnswers) {
         int correctAnswers = countCorrectAnswers(userAnswers);
-        return (double)correctAnswers / (double)answersList.size();
+        return ((double)correctAnswers / (double)answersList.size()) * getMaxScore();
     }
 
     //Counts how many correct answers where provided by the user

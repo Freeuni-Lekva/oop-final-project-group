@@ -143,7 +143,7 @@ public class QuizAttemptDao {
      */
     public List<QuizAttempt> getQuizAttempts(int quizId){
         try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM UserQuizAttempts WHERE quiz_id = ? ORDER BY score DESC, time_taken_seconds")){
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM UserQuizAttempts WHERE quiz_id = ? ORDER BY score DESC, time_taken_seconds ASC")){
             preparedStatement.setInt(1, quizId);
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 return getUserAttempts(resultSet);

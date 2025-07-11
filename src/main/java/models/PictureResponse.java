@@ -15,14 +15,14 @@ import java.util.Objects;
 public class PictureResponse extends Question {
     private HashSet<String> allowedAnswers;
 
-    public PictureResponse(String questionText, QuestionType questionType, int quiz_Id, int orderInQuiz, String imageUrl, HashSet<String> allowedAnswers) {
-        super(questionText, questionType, quiz_Id, orderInQuiz);
+    public PictureResponse(String questionText, QuestionType questionType, int quiz_Id, int orderInQuiz, String imageUrl, HashSet<String> allowedAnswers, double maxScore) {
+        super(questionText, questionType, quiz_Id, orderInQuiz, maxScore);
         this.setImageUrl(imageUrl);
         this.allowedAnswers = allowedAnswers;
     }
 
-    public PictureResponse(int questionId,String questionText, QuestionType questionType, int quiz_Id, int orderInQuiz, String imageUrl, HashSet<String> allowedAnswers) {
-        super(questionId, questionText, questionType, quiz_Id, orderInQuiz);
+    public PictureResponse(int questionId,String questionText, QuestionType questionType, int quiz_Id, int orderInQuiz, String imageUrl, HashSet<String> allowedAnswers, double maxScore) {
+        super(questionId, questionText, questionType, quiz_Id, orderInQuiz, maxScore);
         this.setImageUrl(imageUrl);
         this.allowedAnswers = allowedAnswers;
     }
@@ -52,7 +52,7 @@ public class PictureResponse extends Question {
                 return 0.0;
             }
         }
-        return 1.0;
+        return getMaxScore();
     }
 
     //Cleans the string from trimmed spaces

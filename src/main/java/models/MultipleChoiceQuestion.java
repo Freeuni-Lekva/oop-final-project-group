@@ -11,14 +11,14 @@ import java.util.*;
 public class MultipleChoiceQuestion extends Question {
     private final Map<String, Boolean> options;
 
-    public MultipleChoiceQuestion(int questionId, String questionText, Map<String, Boolean> options, int quizId, int orderInQuiz) {
-        super(questionId, questionText, QuestionType.MULTIPLE_CHOICE, quizId, orderInQuiz);
+    public MultipleChoiceQuestion(int questionId, String questionText, Map<String, Boolean> options, int quizId, int orderInQuiz, double maxScore) {
+        super(questionId, questionText, QuestionType.MULTIPLE_CHOICE, quizId, orderInQuiz, maxScore);
         validateSingleCorrectAnswer(options);
         this.options = options;
     }
 
-    public MultipleChoiceQuestion(String questionText, Map<String, Boolean> options, int quizId, int orderInQuiz) {
-        super(questionText, QuestionType.MULTIPLE_CHOICE, quizId, orderInQuiz);
+    public MultipleChoiceQuestion(String questionText, Map<String, Boolean> options, int quizId, int orderInQuiz, double maxScore) {
+        super(questionText, QuestionType.MULTIPLE_CHOICE, quizId, orderInQuiz, maxScore);
         validateSingleCorrectAnswer(options);
         this.options = options;
     }
@@ -77,7 +77,7 @@ public class MultipleChoiceQuestion extends Question {
     public double calculateScore(List<String> userAnswers) {
         checkUserAnswersException(userAnswers);
         String userAnswer = userAnswers.get(0);
-        return options.get(userAnswer) ? 1.0 : 0.0;
+        return (options.get(userAnswer) ? 1.0 : 0.0) * getMaxScore();
     }
 
     /**

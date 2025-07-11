@@ -24,7 +24,7 @@ public class QuizAttemptDaoTest {
         // Create test user
         PreparedStatement stmt = connection.prepareStatement(
                 "INSERT INTO Users (username, email, password_hash, salt) " +
-                        "VALUES ('testuser', 'test@example.com', 'testhash', 'testsalt')",
+                        "VALUES ('newtestuser', 'newtest@example.com', 'testhash', 'testsalt')",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.executeUpdate();
@@ -101,9 +101,9 @@ public class QuizAttemptDaoTest {
     public void testCompleteAndGetQuizAttempt() throws InterruptedException {
         //Adding quizAtte,pts
         assertTrue(quizAttemptDao.createAttempt(quizAttempt));
-        Thread.sleep(1000); //Making sure the new quiz is created with a different start time
+        Thread.sleep(2000); //Making sure the new quiz is created with a different start time
         assertTrue(quizAttemptDao.createAttempt(quizAttempt2));
-        Thread.sleep(1000); //Making sure the new quiz is created with a different start time
+        Thread.sleep(2000); //Making sure the new quiz is created with a different start time
         QuizAttempt quizAttempt3 = new QuizAttempt(userId, quizAttempt2.getQuizId());
         assertTrue(quizAttemptDao.createAttempt(quizAttempt3));
 
@@ -156,7 +156,7 @@ public class QuizAttemptDaoTest {
         assertTrue(quizAttemptDao.createAttempt(quizAttempt));
         Thread.sleep(1000);
         assertTrue(quizAttemptDao.createAttempt(quizAttempt2));
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         QuizAttempt quizAttempt3 = new QuizAttempt(userId, quizAttempt.getQuizId());
         assertTrue(quizAttemptDao.createAttempt(quizAttempt3));
 

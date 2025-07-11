@@ -243,8 +243,8 @@ public class QuizTest {
         Map<String, Boolean> options = new HashMap<>();
         options.put("Option 1", true);
         options.put("Option 2", false);
-        Question question1 = new MultipleChoiceQuestion("Question 1?", options, 1, 0);
-        Question question2 = new MultipleChoiceQuestion("Question 2?", options, 1, 1);
+        Question question1 = new MultipleChoiceQuestion("Question 1?", options, 1, 0, 1);
+        Question question2 = new MultipleChoiceQuestion("Question 2?", options, 1, 1, 1);
         questions.add(question1);
         questions.add(question2);
         quiz.setQuestions(questions);

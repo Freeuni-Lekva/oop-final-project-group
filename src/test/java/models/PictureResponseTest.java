@@ -21,7 +21,7 @@ class PictureResponseTest {
         allowedAnswers.add("President George Washington");
         allowedAnswers.add("President Washington");
         allowedAnswers.add("The first president of the united states");
-        pictureResponse = new PictureResponse( "Who is shown on this image", QuestionType.PICTURE_RESPONSE, 1, 1, "/image1", allowedAnswers);
+        pictureResponse = new PictureResponse( "Who is shown on this image", QuestionType.PICTURE_RESPONSE, 1, 1, "/image1", allowedAnswers, 2);
     }
 
     @Test
@@ -55,7 +55,7 @@ class PictureResponseTest {
         allowedAnswers1.add("President Washington");
         allowedAnswers1.add("The first president of the united states");
 
-        PictureResponse test = new PictureResponse( "Who is shown on this image", QuestionType.PICTURE_RESPONSE, 1, 1, "/image1", allowedAnswers1);
+        PictureResponse test = new PictureResponse( "Who is shown on this image", QuestionType.PICTURE_RESPONSE, 1, 1, "/image1", allowedAnswers1, 2);
         //test when they are equal
         assertTrue(pictureResponse.equals(test));
 
@@ -66,7 +66,7 @@ class PictureResponseTest {
 
         HashSet<String> allowedAnswers2 = new HashSet<>();
         //test when there is a difference in the last field
-        PictureResponse test2 = new PictureResponse(1, "Who is shown on this image", QuestionType.PICTURE_RESPONSE, 1, 1, "/image1", allowedAnswers2);
+        PictureResponse test2 = new PictureResponse(1, "Who is shown on this image", QuestionType.PICTURE_RESPONSE, 1, 1, "/image1", allowedAnswers1, 1);
         assertFalse(pictureResponse.equals(test2));
 
         // test when null
@@ -130,13 +130,13 @@ class PictureResponseTest {
     public void calculateScoreTest1(){
         List<String> answers = new ArrayList<>();
         answers.add("George Washington");
-        assertEquals(1.0, pictureResponse.calculateScore(answers));
+        assertEquals(2.0, pictureResponse.calculateScore(answers));
 
         answers.add("Washington");
         answers.add("President George Washington");
         answers.add("President Washington");
         answers.add("The first president of the united states");
-        assertEquals(1.0, pictureResponse.calculateScore(answers));
+        assertEquals(2.0, pictureResponse.calculateScore(answers));
     }
 
 

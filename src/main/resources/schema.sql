@@ -69,6 +69,7 @@ CREATE TABLE Questions (
     question_type ENUM('QUESTION_RESPONSE', 'FILL_IN_BLANK', 'MULTIPLE_CHOICE', 'PICTURE_RESPONSE', 'MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS') NOT NULL,
     image_url VARCHAR(512),
     order_in_quiz INT,
+    max_score DOUBLE,
     FOREIGN KEY (quiz_id) REFERENCES Quizzes(quiz_id) ON DELETE CASCADE
 );
 
@@ -184,8 +185,8 @@ INSERT INTO Users (user_id, username, email, password_hash, salt) VALUES (1, 'te
 INSERT INTO Quizzes (quiz_id, creator_user_id, title, description) VALUES (1, 1, 'Java Basics Quiz', 'A simple quiz to test fundamental Java knowledge.');
 
 -- Sample Questions
-INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (1, 1, 'What is the default value of a boolean in Java?', 'MULTIPLE_CHOICE', 0);
-INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (2, 1, 'Which keyword is used to define a constant in Java?', 'MULTIPLE_CHOICE', 1);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz, max_score) VALUES (1, 1, 'What is the default value of a boolean in Java?', 'MULTIPLE_CHOICE', 0, 1);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz, max_score) VALUES (2, 1, 'Which keyword is used to define a constant in Java?', 'MULTIPLE_CHOICE', 1, 1);
 
 -- Sample Options for Question 1
 INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (1, 'true', FALSE);
@@ -202,8 +203,8 @@ INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (2, 'l
 INSERT INTO Quizzes (quiz_id, creator_user_id, title, description) VALUES (2, 1, 'Georgian History', 'A fill-in-the-blank quiz about the history of Georgia.');
 
 -- Sample Questions for Fill-in-the-Blank Quiz
-INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (3, 2, 'The capital of Georgia is _____ and it was founded by _____.', 'FILL_IN_BLANK', 0);
-INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (4, 2, 'The Golden Age of Georgia was during the reign of Queen _____.', 'FILL_IN_BLANK', 1);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz, max_score) VALUES (3, 2, 'The capital of Georgia is _____ and it was founded by _____.', 'FILL_IN_BLANK', 0, 1);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz, max_score) VALUES (4, 2, 'The Golden Age of Georgia was during the reign of Queen _____.', 'FILL_IN_BLANK', 1, 1);
 
 -- Sample Answers for Question 3
 INSERT INTO FillInBlankAnswers (question_id, blank_index, acceptable_answer) VALUES (3, 0, 'Tbilisi');
@@ -218,8 +219,8 @@ INSERT INTO FillInBlankAnswers (question_id, blank_index, acceptable_answer) VAL
 INSERT INTO Quizzes (quiz_id, creator_user_id, title, description) VALUES (3, 1, 'World Capitals', 'Test your knowledge of world capitals.');
 
 -- Sample Questions for Geography Quiz
-INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (5, 3, 'What is the capital of Canada?', 'MULTIPLE_CHOICE', 0);
-INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (6, 3, 'What is the capital of Australia?', 'MULTIPLE_CHOICE', 1);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz, max_score) VALUES (5, 3, 'What is the capital of Canada?', 'MULTIPLE_CHOICE', 0, 1);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz, max_score) VALUES (6, 3, 'What is the capital of Australia?', 'MULTIPLE_CHOICE', 1, 1);
 
 -- Sample Options for Question 5
 INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (5, 'Toronto', FALSE);
@@ -236,8 +237,8 @@ INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (6, 'P
 INSERT INTO Quizzes (quiz_id, creator_user_id, title, description) VALUES (4, 1, 'European Geography', 'Select all correct options.');
 
 -- Sample Questions for Multi-Answer Quiz
-INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (7, 4, 'Which of the following are countries in the European Union?', 'MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS', 0);
-INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (8, 4, 'Which of these cities are capitals of EU countries?', 'MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS', 1);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz, max_score) VALUES (7, 4, 'Which of the following are countries in the European Union?', 'MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS', 0, 1);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz, max_score) VALUES (8, 4, 'Which of these cities are capitals of EU countries?', 'MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS', 1, 1);
 
 -- Sample Options for Question 7
 INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (7, 'Germany', TRUE);

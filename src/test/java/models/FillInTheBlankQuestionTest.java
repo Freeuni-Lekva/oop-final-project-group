@@ -16,7 +16,7 @@ public class FillInTheBlankQuestionTest {
         String questionText = "The capital of Georgia is _____ and it was founded by _____.";
         int quizId = 1;
         ArrayList<HashSet<String>> answers = generateCorrectAnswers();
-        fillInTheBlankQuestion = new FillInTheBlankQuestion(questionId, questionText, answers, quizId, 0);
+        fillInTheBlankQuestion = new FillInTheBlankQuestion(questionId, questionText, answers, quizId, 0, 2);
     }
 
     //Tests all the getters and setters of the question
@@ -144,13 +144,13 @@ public class FillInTheBlankQuestionTest {
         ArrayList<String> answers = new ArrayList<>();
         answers.add("Tbilisi");
         answers.add("Vakhtang gorgasali");
-        assertEquals(0.5, fillInTheBlankQuestion.calculateScore(answers), 0.001);
+        assertEquals(1, fillInTheBlankQuestion.calculateScore(answers), 0.001);
         answers.set(0, "tbilisi");
         assertEquals(0, fillInTheBlankQuestion.calculateScore(answers));
         answers.set(1, "Vakhtang Gorgasali");
-        assertEquals(0.5, fillInTheBlankQuestion.calculateScore(answers), 0.001);
+        assertEquals(1, fillInTheBlankQuestion.calculateScore(answers), 0.001);
         answers.set(0, "Tbilisi");
-        assertEquals(1, fillInTheBlankQuestion.calculateScore(answers));
+        assertEquals(2, fillInTheBlankQuestion.calculateScore(answers));
     }
 
     //Checks the overridden equals() function
@@ -161,18 +161,20 @@ public class FillInTheBlankQuestionTest {
         ArrayList<Integer> randomCollection = new ArrayList<>();
         assertNotEquals(fillInTheBlankQuestion, randomCollection);
         fillInTheBlankQuestion.setImageUrl("imageUrl");
-        FillInTheBlankQuestion newQuestion = new FillInTheBlankQuestion(10, "Hi", new ArrayList<>(), 10, 1);
+        FillInTheBlankQuestion newQuestion = new FillInTheBlankQuestion(10, "Hi", new ArrayList<>(), 10, 1, 1);
         assertNotEquals(fillInTheBlankQuestion, newQuestion);
-        newQuestion = new FillInTheBlankQuestion(10, "Hi", new ArrayList<>(), 1, 1);
+        newQuestion = new FillInTheBlankQuestion(10, "Hi", new ArrayList<>(), 1, 1, 1);
         assertNotEquals(fillInTheBlankQuestion, newQuestion);
-        newQuestion = new FillInTheBlankQuestion(10, "The capital of Georgia is _____ and it was founded by _____.", new ArrayList<>(), 1, 1);
+        newQuestion = new FillInTheBlankQuestion(10, "The capital of Georgia is _____ and it was founded by _____.", new ArrayList<>(), 1, 1, 1);
         assertNotEquals(fillInTheBlankQuestion, newQuestion);
         ArrayList<HashSet<String>> answers = generateCorrectAnswers();
-        newQuestion = new FillInTheBlankQuestion(10, "The capital of Georgia is _____ and it was founded by _____.", answers, 1, 1);
+        newQuestion = new FillInTheBlankQuestion(10, "The capital of Georgia is _____ and it was founded by _____.", answers, 1, 1, 1);
         assertNotEquals(fillInTheBlankQuestion, newQuestion);
-        newQuestion = new FillInTheBlankQuestion(1, "The capital of Georgia is _____ and it was founded by _____.", answers, 1, 1);
+        newQuestion = new FillInTheBlankQuestion(1, "The capital of Georgia is _____ and it was founded by _____.", answers, 1, 1, 1);
         assertNotEquals(fillInTheBlankQuestion, newQuestion);
-        newQuestion = new FillInTheBlankQuestion(1, "The capital of Georgia is _____ and it was founded by _____.", answers, 1, 0);
+        newQuestion = new FillInTheBlankQuestion(1, "The capital of Georgia is _____ and it was founded by _____.", answers, 1, 0, 1);
+        assertNotEquals(fillInTheBlankQuestion, newQuestion);
+        newQuestion = new FillInTheBlankQuestion(1, "The capital of Georgia is _____ and it was founded by _____.", answers, 1, 0, 2);
         assertNotEquals(fillInTheBlankQuestion, newQuestion);
         newQuestion.setImageUrl("imageUrl");
         assertEquals(fillInTheBlankQuestion, newQuestion);
@@ -185,7 +187,7 @@ public class FillInTheBlankQuestionTest {
     @Test
     public void testConstructorWithoutId(){
         ArrayList<HashSet<String>> answers = generateCorrectAnswers();
-        Question newQuestion = new FillInTheBlankQuestion("The capital of Georgia is _____ and it was founded by _____.", answers, 1, 0);
+        Question newQuestion = new FillInTheBlankQuestion("The capital of Georgia is _____ and it was founded by _____.", answers, 1, 0, 1);
         assertEquals(-1, newQuestion.getQuestionId());
         assertNotEquals(fillInTheBlankQuestion, newQuestion);
         newQuestion.setQuestionId(1);
@@ -197,7 +199,7 @@ public class FillInTheBlankQuestionTest {
     @Test
     public void testSetQuestionId(){
         ArrayList<HashSet<String>> answers = generateCorrectAnswers();
-        FillInTheBlankQuestion question = new FillInTheBlankQuestion("Hi", answers, 1, 0);
+        FillInTheBlankQuestion question = new FillInTheBlankQuestion("Hi", answers, 1, 0, 1);
         assertEquals(-1, question.getQuestionId());
         question.setQuestionId(2);
         assertEquals(2, question.getQuestionId());

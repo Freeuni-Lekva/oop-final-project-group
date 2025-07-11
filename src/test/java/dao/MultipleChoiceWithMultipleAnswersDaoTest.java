@@ -100,7 +100,7 @@ public class MultipleChoiceWithMultipleAnswersDaoTest {
         answers.put("Spain", true);
 
         //addQuestion Test
-        multipleChoiceWithMultipleAnswersQuestion = new MultipleChoiceWithMultipleAnswersQuestion(questionText, answers, Integer.MAX_VALUE, 0);
+        multipleChoiceWithMultipleAnswersQuestion = new MultipleChoiceWithMultipleAnswersQuestion(questionText, answers, Integer.MAX_VALUE, 0, 1);
         assertFalse(multipleChoiceWithMultipleAnswersDao.addQuestion(multipleChoiceWithMultipleAnswersQuestion));
 
         //getQuestionById Test
@@ -140,7 +140,8 @@ public class MultipleChoiceWithMultipleAnswersDaoTest {
                 multipleChoiceWithMultipleAnswersQuestion2.getQuestionText(),
                 multipleChoiceWithMultipleAnswersQuestion2.getOptions(),
                 multipleChoiceWithMultipleAnswersQuestion2.getQuizId(),
-                multipleChoiceWithMultipleAnswersQuestion2.getOrderInQuiz());
+                multipleChoiceWithMultipleAnswersQuestion2.getOrderInQuiz(),
+                multipleChoiceWithMultipleAnswersQuestion2.getMaxScore());
         assertTrue(multipleChoiceWithMultipleAnswersDao.updateQuestion(multipleChoiceWithMultipleAnswersQuestion));
         Question q = multipleChoiceWithMultipleAnswersDao.getQuestionById(multipleChoiceWithMultipleAnswersQuestion.getQuestionId());
         assertEquals(multipleChoiceWithMultipleAnswersQuestion, q);
@@ -155,7 +156,7 @@ public class MultipleChoiceWithMultipleAnswersDaoTest {
         answers.put("France", true);
         answers.put("Japan", false);
         answers.put("Spain", true);
-        multipleChoiceWithMultipleAnswersQuestion = new MultipleChoiceWithMultipleAnswersQuestion(questionText, answers, testQuizId, 0);
+        multipleChoiceWithMultipleAnswersQuestion = new MultipleChoiceWithMultipleAnswersQuestion(questionText, answers, testQuizId, 0, 1);
 
         String questionText2 = "Which of these countries are NOT located in Europe?";
         Map<String, Boolean> answers2 = new HashMap<>();
@@ -164,6 +165,6 @@ public class MultipleChoiceWithMultipleAnswersDaoTest {
         answers2.put("France", false);
         answers2.put("Japan", true);
         answers2.put("Spain", false);
-        multipleChoiceWithMultipleAnswersQuestion2 = new MultipleChoiceWithMultipleAnswersQuestion(questionText2, answers2, testQuizId, 1);
+        multipleChoiceWithMultipleAnswersQuestion2 = new MultipleChoiceWithMultipleAnswersQuestion(questionText2, answers2, testQuizId, 1, 2);
     }
 }
