@@ -282,7 +282,7 @@ public class QuizSession {
      */
     private UserAnswer createUserAnswerForQuestion(Question question, String answer, boolean isCorrect) {
         if (question.getQuestionType().equals("MULTIPLE_CHOICE") ||
-                question.getQuestionType().equals("MULTI_ANSWER_UNORDERED")) {
+                question.getQuestionType().equals("MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS")) {
             Integer optionId = findOptionId(question, answer);
             return new UserAnswer(attemptId, question.getQuestionId(), answer, optionId, isCorrect);
         } else {
