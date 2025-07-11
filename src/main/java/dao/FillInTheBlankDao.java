@@ -53,7 +53,7 @@ public class FillInTheBlankDao extends AbstractQuestionDao {
     }
 
     @Override
-    protected Question createQuestionObject(int questionId, String questionText, Object answers, int quizId, int orderInQuiz, double maxScore) {
+    protected Question createQuestionObject(int questionId, String questionText, Object answers, int quizId, int orderInQuiz, double maxScore, String imageUrl) {
         return new FillInTheBlankQuestion(questionId, questionText, (ArrayList<HashSet<String>>)answers, quizId, orderInQuiz, maxScore);
     }
 

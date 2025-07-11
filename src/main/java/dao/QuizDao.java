@@ -68,14 +68,14 @@ public class QuizDao {
      */
     public Quiz getQuizById(int quizId){
         try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Quizzes WHERE quiz_id = ?")){
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Quizzes WHERE quiz_id = ? ")){
             preparedStatement.setInt(1, quizId);
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 if (resultSet.next()) {
                    Quiz quiz = getQuizFromResultSet(resultSet, quizId);
                    // Now, fetch the questions for this quiz
                    List<models.Question> questions = new ArrayList<>();
-                   String questionsQuery = "SELECT question_id, question_type FROM Questions WHERE quiz_id = ?";
+                   String questionsQuery = "SELECT question_id, question_type FROM Questions WHERE quiz_id = ? ORDER BY order_in_quiz";
                    try (PreparedStatement questionsStmt = connection.prepareStatement(questionsQuery)) {
                        questionsStmt.setInt(1, quizId);
                        try (ResultSet questionsRs = questionsStmt.executeQuery()) {
