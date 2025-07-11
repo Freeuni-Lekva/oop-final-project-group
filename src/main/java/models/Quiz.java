@@ -2,6 +2,7 @@ package models;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a quiz with configurable settings and properties.
@@ -214,7 +215,7 @@ public class Quiz {
         Quiz quiz = (Quiz) o;
         return quizId == quiz.quizId && creatorUserId == quiz.creatorUserId && title.equals(quiz.title) && description.equals(quiz.description)
                 && creationDate.equals(quiz.creationDate) && isRandomOrder == quiz.isRandomOrder && quizDisplayType == quiz.quizDisplayType
-                && isImmediateCorrection == quiz.isImmediateCorrection && isPracticeModeEnabled == quiz.isPracticeModeEnabled;
+                && isImmediateCorrection == quiz.isImmediateCorrection && isPracticeModeEnabled == quiz.isPracticeModeEnabled && Objects.equals(questions, quiz.questions);
     }
 
     /**

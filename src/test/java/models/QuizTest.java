@@ -4,10 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -202,6 +199,10 @@ public class QuizTest {
         ArrayList<Boolean> randomCollection = new ArrayList<>();
         assertFalse(quiz.equals(randomCollection));
         Quiz newQuiz = new Quiz(1, 2, "New Quiz", "New Constructor", dateTime2, true, QuizDisplayType.MULTI_PAGE_QUESTION, true, true);
+        List<Question> questions = new ArrayList<>();
+        FillInTheBlankQuestion fillInTheBlankQuestion = new FillInTheBlankQuestion(1, "", null, quiz.getQuizId(), 1 , 1);
+        questions.add(fillInTheBlankQuestion);
+        newQuiz.setQuestions(questions);
         assertNotEquals(quiz, newQuiz);
         quiz.setQuizId(newQuiz.getQuizId());
         assertNotEquals(quiz, newQuiz);
@@ -220,6 +221,8 @@ public class QuizTest {
         quiz.setImmediateCorrection(newQuiz.isImmediateCorrection());
         assertNotEquals(quiz, newQuiz);
         quiz.setPracticeModeEnabled(newQuiz.isPracticeModeEnabled());
+        assertNotEquals(quiz, newQuiz);
+        quiz.setQuestions(questions);
         assertEquals(quiz, newQuiz);
     }
 
