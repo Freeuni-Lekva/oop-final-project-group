@@ -5,6 +5,7 @@
             <li><a href="${pageContext.request.contextPath}/">Home</a></li>
             <li><a href="${pageContext.request.contextPath}/quizzes">Quizzes</a></li>
             <c:if test="${not empty sessionScope.user}">
+                <li><a href="${pageContext.request.contextPath}/create-quiz">Create a Quiz</a></li>
                 <li><a href="${pageContext.request.contextPath}/user-search">Search Users</a></li>
                 <li><a href="${pageContext.request.contextPath}/friend-requests">Friend Requests</a></li>
                 <li><a href="${pageContext.request.contextPath}/friends-list">My Friends</a></li>
