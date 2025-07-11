@@ -55,7 +55,7 @@ public class QuizSessionTest {
         //Creates a second quiz
         stmt = connection.prepareStatement(
                 "INSERT INTO Quizzes (creator_user_id, title, description, creation_date, is_random_order, display_type, is_immediate_correction, is_practice_mode_enabled) " +
-                        "VALUES (?, 'Restrictive Quiz', 'Test Description', NOW(), true, 'MULTI_PAGE_QUESTION', true, false)",
+                        "VALUES (?, 'Restrictive Quiz', 'Test Description', NOW(), false, 'MULTI_PAGE_QUESTION', true, false)",
                 Statement.RETURN_GENERATED_KEYS
         );
         stmt.setInt(1, userId);

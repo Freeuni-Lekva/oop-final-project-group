@@ -52,7 +52,7 @@ public class MultipleChoiceDao extends AbstractQuestionDao {
     }
 
     @Override
-    protected Question createQuestionObject(int questionId, String questionText, Object answers, int quizId, int orderInQuiz, double maxScore){
+    protected Question createQuestionObject(int questionId, String questionText, Object answers, int quizId, int orderInQuiz, double maxScore, String imageUrl){
         return new MultipleChoiceQuestion(questionId, questionText, (Map<String, Boolean>)answers, quizId, orderInQuiz, maxScore);
     }
 

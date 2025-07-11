@@ -53,7 +53,7 @@ public class PictureResponse extends Question {
     @Override
     public double calculateScore(List<String> userAnswers) {
         for (String userAnswer : userAnswers) {
-            if (!allowedAnswers.contains(userAnswer)) {
+            if (!allowedAnswers.contains(cleanString(userAnswer))) {
                 return 0.0;
             }
         }
@@ -76,7 +76,7 @@ public class PictureResponse extends Question {
                 Objects.equals(this.getQuestionType(), that.getQuestionType()) &&
                 Objects.equals(this.getImageUrl(), that.getImageUrl()) &&
                 Objects.equals(this.getOrderInQuiz(), that.getOrderInQuiz()) &&
-                allowedAnswers.equals(that.allowedAnswers);
+                allowedAnswers.equals(that.allowedAnswers) && Objects.equals(this.getMaxScore(), that.getMaxScore());
     }
 
 }
