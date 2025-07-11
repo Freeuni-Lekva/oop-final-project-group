@@ -1,0 +1,56 @@
+/*
+ * FORMS STYLES
+ * Contains all styles for form elements, used in Login and Register pages.
+ * - Form card layout
+ * - Input, label, and validation message styling
+ */
+
+.form-card {
+    background: var(--card-bg-color);
+    padding: calc(var(--spacing-unit) * 4); /* 32px */
+    border-radius: var(--spacing-unit); /* 8px */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    margin: calc(var(--spacing-unit) * 6) auto; /* 48px */
+}
+
+.form-group {
+    margin-bottom: calc(var(--spacing-unit) * 3); /* 24px */
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-unit); /* 8px */
+    font-weight: bold;
+    color: var(--text-secondary-color);
+}
+
+.form-input {
+    width: 100%;
+    padding: calc(var(--spacing-unit) * 1.5); /* 12px */
+    border: 1px solid var(--border-color);
+    border-radius: var(--spacing-unit); /* 8px */
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(10, 37, 64, 0.1);
+}
+
+.validation-error,
+.validation-success {
+    display: block;
+    margin-top: var(--spacing-unit);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.validation-error {
+    color: var(--error-color);
+}
+
+.validation-success {
+    color: var(--accent-color);
+}

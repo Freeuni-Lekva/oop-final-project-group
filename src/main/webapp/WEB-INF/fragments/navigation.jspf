@@ -1,0 +1,24 @@
+<header class="main-header">
+    <nav class="navbar">
+        <a href="${pageContext.request.contextPath}/" class="navbar-brand">QuizWebsite</a>
+        <ul class="nav-links">
+            <li><a href="${pageContext.request.contextPath}/">Home</a></li>
+            <li><a href="${pageContext.request.contextPath}/quizzes">Quizzes</a></li>
+            <c:if test="${not empty sessionScope.user}">
+                <li><a href="${pageContext.request.contextPath}/create-quiz">Create a Quiz</a></li>
+                <li><a href="${pageContext.request.contextPath}/user-search">Search Users</a></li>
+                <li><a href="${pageContext.request.contextPath}/friend-requests">Friend Requests</a></li>
+                <li><a href="${pageContext.request.contextPath}/friends-list">My Friends</a></li>
+            </c:if>
+        </ul>
+        <div class="nav-actions">
+            <c:if test="${not empty sessionScope.user}">
+                <a href="${pageContext.request.contextPath}/logout" class="btn btn-secondary">Logout</a>
+            </c:if>
+            <c:if test="${empty sessionScope.user}">
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-secondary">Login</a>
+                <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">Register</a>
+            </c:if>
+        </div>
+    </nav>
+</header>
