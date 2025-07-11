@@ -3,80 +3,59 @@ package models;
 import java.util.*;
 
 /**
- * Represents a multiple choice question with predefined options.
- * Users select from available choices, and scoring requires all
- * selected answers to be correct (partial credit results in zero score).
- * Questions must have at least one correct option and at least one
- * incorrect option to be valid. Uses the "FillInBlankAnswers" table
- * to store answers with blank_index to maintain the order of blanks in the question.
+ * Represents a multiple choice question with exactly one correct answer.
+ * Users can select only one option, and scoring is binary (1.0 for correct, 0.0 for incorrect).
+ * Questions must have exactly one correct option to be valid.
+ * Uses the "AnswerOptionsMC" table to store options with their correctness flags.
  */
 public class MultipleChoiceQuestion extends Question {
-    //A map where answer option and their correctness is stored
     private final Map<String, Boolean> options;
-
 
     public MultipleChoiceQuestion(int questionId, String questionText, Map<String, Boolean> options, int quizId, int orderInQuiz) {
         super(questionId, questionText, QuestionType.MULTIPLE_CHOICE, quizId, orderInQuiz);
-        checkOptionsException(options);
+        validateSingleCorrectAnswer(options);
         this.options = options;
     }
 
     public MultipleChoiceQuestion(String questionText, Map<String, Boolean> options, int quizId, int orderInQuiz) {
         super(questionText, QuestionType.MULTIPLE_CHOICE, quizId, orderInQuiz);
-        checkOptionsException(options);
+        validateSingleCorrectAnswer(options);
         this.options = options;
     }
 
     /**
-     * @param options the options Map with correctness flags
-     * @throws IllegalArgumentException if all the options are true or false
+     * Checks if the single user answer is correct.
+     * @param userAnswers list containing exactly one user answer
+     * @return list with single boolean indicating if the answer is correct
+     * @throws IllegalArgumentException if userAnswers doesn't contain exactly one valid answer
      */
-    public void checkOptionsException(Map<String, Boolean> options) throws IllegalArgumentException {
-        int correctAnswers = 0;
-        for(String option : options.keySet()) {
-            if(options.get(option)) {
-                correctAnswers++;
-            }
-        }
-        if(correctAnswers == 0){
-            throw new IllegalArgumentException("At least one option must be correct");
-        }else if (correctAnswers == options.size()){
-            throw new IllegalArgumentException("All options can't be correct");
-        }
-    }
-
     @Override
     public List<Boolean> checkAnswers(List<String> userAnswers) {
         checkUserAnswersException(userAnswers);
         List<Boolean> correctAnswers = new ArrayList<>();
-        for(String answer : userAnswers) {
-            if(options.get(answer)) {
-                correctAnswers.add(true);
-            }else{
-                correctAnswers.add(false);
-            }
-        }
+        correctAnswers.add(options.get(userAnswers.get(0)));
         return correctAnswers;
     }
 
     /**
-     * Throws an exception if the user provided too many answers or
-     * if he provided an answer that is not in the options.
+     * Validates user input to ensure exactly one answer is selected and it exists in options.
      * @param userAnswers the answers provided by a user as a List
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if not exactly one answer or answer doesn't exist in options
      */
     public void checkUserAnswersException(List<String> userAnswers) throws IllegalArgumentException{
-        if(userAnswers.size() > options.size()){
-            throw new IllegalArgumentException("Wrong number of user answers!");
+        if(userAnswers.size() != 1){
+            throw new IllegalArgumentException("Must select exactly one answer!");
         }else{
-            for(int i = 0; i < userAnswers.size(); i++){
-                if(!options.containsKey(userAnswers.get(i))){
-                    throw new IllegalArgumentException("Wrong answer at index " + i + "!");
-                }
+            if (!options.containsKey(userAnswers.get(0))) {
+                throw new IllegalArgumentException("Invalid answer option!");
             }
         }
     }
 
+    /**
+     * Gets all options marked as correct (should be exactly one).
+     * @return list containing the single correct answer
+     */
     @Override
     public List<String> getCorrectAnswers() {
         List<String> correctAnswers = new ArrayList<>();
@@ -88,22 +67,21 @@ public class MultipleChoiceQuestion extends Question {
         return correctAnswers;
     }
 
+    /**
+     * Calculates score for single-answer multiple choice question.
+     * @param userAnswers list containing exactly one user answer
+     * @return 1.0 if correct, 0.0 if incorrect
+     * @throws IllegalArgumentException if userAnswers doesn't contain exactly one valid answer
+     */
     @Override
     public double calculateScore(List<String> userAnswers) {
         checkUserAnswersException(userAnswers);
-        List<String> correctAnswers = getCorrectAnswers();
-        double correctAnswersCount = 0;
-        for(String userAnswer : userAnswers) {
-            if(correctAnswers.contains(userAnswer)) {
-                correctAnswersCount++;
-            }else{
-                return 0.0;
-            }
-        }
-        return correctAnswersCount / correctAnswers.size();
+        String userAnswer = userAnswers.get(0);
+        return options.get(userAnswer) ? 1.0 : 0.0;
     }
 
     /**
+     * Returns defensive copy of the options map to prevent external modification.
      * @return defensive copy of the options map
      */
     public Map<String, Boolean> getOptions() {
@@ -119,5 +97,20 @@ public class MultipleChoiceQuestion extends Question {
                 && getQuestionType().equals(that.getQuestionType()) && getOptions().equals(that.getOptions()) &&
                 getQuestionText().equals(that.getQuestionText()) && Objects.equals(getImageUrl(), that.getImageUrl()) &&
                 getOrderInQuiz().equals(that.getOrderInQuiz());
+    }
+
+    /*
+     * Validates that exactly one correct answer exists in the options.
+     */
+    private void validateSingleCorrectAnswer(Map<String, Boolean> options) {
+        int correctCount = 0;
+        for (Boolean isCorrect : options.values()) {
+            if (isCorrect) {
+                correctCount++;
+            }
+        }
+        if (correctCount != 1) {
+            throw new IllegalArgumentException("Multiple choice questions must have exactly one correct answer");
+        }
     }
 }

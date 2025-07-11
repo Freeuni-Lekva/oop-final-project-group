@@ -134,9 +134,11 @@ public class QuizAttemptDaoTest {
         //Testing getQuizAttempts, when same score, should be sorted with time passed since start of a quiz
         assertTrue(quizAttemptDao.completeAttempt(quizAttempt2.getAttemptId(), 200));
         assertTrue(quizAttemptDao.completeAttempt(quizAttempt3.getAttemptId(), 200));
+        QuizAttempt freshAttempt2 = quizAttemptDao.getAttemptById(quizAttempt2.getAttemptId());
+        QuizAttempt freshAttempt3 = quizAttemptDao.getAttemptById(quizAttempt3.getAttemptId());
         List<QuizAttempt> quizAttempts3 = new ArrayList<>();
-        quizAttempts3.add(quizAttempt3);
-        quizAttempts3.add(quizAttempt2);
+        quizAttempts3.add(freshAttempt3);
+        quizAttempts3.add(freshAttempt2);
         assertEquals(quizAttempts3, quizAttemptDao.getQuizAttempts(quizAttempt2.getQuizId()));
     }
 

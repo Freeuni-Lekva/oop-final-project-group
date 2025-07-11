@@ -39,7 +39,7 @@
                         </div>
                     </c:forEach>
                 </c:when>
-                <c:when test="${currentQuestion.questionType == 'MULTI_ANSWER_UNORDERED'}">
+                <c:when test="${currentQuestion.questionType == 'MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS'}">
                     <c:forEach var="option" items="${currentQuestion.options}">
                         <div class="form-group">
                             <input type="checkbox" name="userAnswers" id="option-${option.key}" value="${option.key}">

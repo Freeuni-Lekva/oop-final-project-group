@@ -194,9 +194,9 @@ public class QuizDaoTest {
         HashMap<String, Boolean> answers = new HashMap<>();
         answers.put("true", true);
         answers.put("false", false);
-        Question question = new MultipleChoiceQuestion("text", answers, quiz.getQuizId(), 1);
-        MultipleChoiceDao multipleChoiceDAo = new MultipleChoiceDao();
-        multipleChoiceDAo.addQuestion(question);
+        Question question = new MultipleChoiceWithMultipleAnswersQuestion("text", answers, quiz.getQuizId(), 1);
+        MultipleChoiceWithMultipleAnswersDao multipleChoiceWithMultipleAnswersDAo = new MultipleChoiceWithMultipleAnswersDao();
+        multipleChoiceWithMultipleAnswersDAo.addQuestion(question);
         FillInTheBlankQuestion question2 = new FillInTheBlankQuestion("text", new ArrayList<HashSet<String>>(), quiz.getQuizId(), 2);
         FillInTheBlankDao fillInTheBlankDao = new FillInTheBlankDao();
         fillInTheBlankDao.addQuestion(question2);

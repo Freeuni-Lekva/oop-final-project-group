@@ -3,8 +3,8 @@ package models;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
-public class MultipleChoiceQuestionTest {
-    MultipleChoiceQuestion multipleChoiceQuestion;
+public class MultipleChoiceWithMultipleAnswersQuestionTest {
+    MultipleChoiceWithMultipleAnswersQuestion multipleChoiceWithMultipleAnswersQuestion;
 
     //Sets up the question that will be tested
     @BeforeEach
@@ -18,26 +18,26 @@ public class MultipleChoiceQuestionTest {
         answers.put("France", true);
         answers.put("Japan", false);
         answers.put("Spain", true);
-        multipleChoiceQuestion = new MultipleChoiceQuestion(questionId, questionText, answers, quizId, 0);
+        multipleChoiceWithMultipleAnswersQuestion = new MultipleChoiceWithMultipleAnswersQuestion(questionId, questionText, answers, quizId, 0);
     }
 
     //Tests all the getters and setters of the question
     @Test
     public void testGettersAndSetters() {
-        assertNull(multipleChoiceQuestion.getImageUrl());
-        assertEquals(0, multipleChoiceQuestion.getOrderInQuiz());
+        assertNull(multipleChoiceWithMultipleAnswersQuestion.getImageUrl());
+        assertEquals(0, multipleChoiceWithMultipleAnswersQuestion.getOrderInQuiz());
         String imageUrl = "www.link.com";
-        multipleChoiceQuestion.setImageUrl(imageUrl);
-        assertEquals(imageUrl, multipleChoiceQuestion.getImageUrl());
-        multipleChoiceQuestion.setOrderInQuiz(9);
-        assertEquals(9, multipleChoiceQuestion.getOrderInQuiz());
-        assertEquals("MULTIPLE_CHOICE", multipleChoiceQuestion.getQuestionType());
-        assertEquals("Which of these countries are located in Europe?", multipleChoiceQuestion.getQuestionText());
-        assertEquals(1, multipleChoiceQuestion.getQuestionId());
-        assertEquals(1, multipleChoiceQuestion.getQuizId());
+        multipleChoiceWithMultipleAnswersQuestion.setImageUrl(imageUrl);
+        assertEquals(imageUrl, multipleChoiceWithMultipleAnswersQuestion.getImageUrl());
+        multipleChoiceWithMultipleAnswersQuestion.setOrderInQuiz(9);
+        assertEquals(9, multipleChoiceWithMultipleAnswersQuestion.getOrderInQuiz());
+        assertEquals("MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS", multipleChoiceWithMultipleAnswersQuestion.getQuestionType());
+        assertEquals("Which of these countries are located in Europe?", multipleChoiceWithMultipleAnswersQuestion.getQuestionText());
+        assertEquals(1, multipleChoiceWithMultipleAnswersQuestion.getQuestionId());
+        assertEquals(1, multipleChoiceWithMultipleAnswersQuestion.getQuizId());
         Map<String, Boolean> answers = generateCorrectAnswers();
-        assertEquals(answers, multipleChoiceQuestion.getOptions());
-        assertNotSame(answers, multipleChoiceQuestion.getOptions());
+        assertEquals(answers, multipleChoiceWithMultipleAnswersQuestion.getOptions());
+        assertNotSame(answers, multipleChoiceWithMultipleAnswersQuestion.getOptions());
     }
 
     //Checks checkUserAnswers() function when all the provided answers were true
@@ -51,7 +51,7 @@ public class MultipleChoiceQuestionTest {
         correctAnswers.add(true);
         correctAnswers.add(true);
         correctAnswers.add(true);
-        assertEquals(correctAnswers, multipleChoiceQuestion.checkAnswers(answers));
+        assertEquals(correctAnswers, multipleChoiceWithMultipleAnswersQuestion.checkAnswers(answers));
     }
 
     //Checks checkUserAnswers() function when all the provided answers were false
@@ -63,7 +63,7 @@ public class MultipleChoiceQuestionTest {
         ArrayList<Boolean> correctAnswers = new ArrayList<>();
         correctAnswers.add(false);
         correctAnswers.add(false);
-        assertEquals(correctAnswers, multipleChoiceQuestion.checkAnswers(answers));
+        assertEquals(correctAnswers, multipleChoiceWithMultipleAnswersQuestion.checkAnswers(answers));
     }
 
     /*
@@ -78,14 +78,14 @@ public class MultipleChoiceQuestionTest {
         ArrayList<Boolean> correctAnswers = new ArrayList<>();
         correctAnswers.add(true);
         correctAnswers.add(false);
-        assertEquals(correctAnswers, multipleChoiceQuestion.checkAnswers(answers));
+        assertEquals(correctAnswers, multipleChoiceWithMultipleAnswersQuestion.checkAnswers(answers));
         answers.add("Brazil");
         answers.add("Spain");
         answers.add("France");
         correctAnswers.add(false);
         correctAnswers.add(true);
         correctAnswers.add(true);
-        assertEquals(correctAnswers, multipleChoiceQuestion.checkAnswers(answers));
+        assertEquals(correctAnswers, multipleChoiceWithMultipleAnswersQuestion.checkAnswers(answers));
     }
 
     /*
@@ -98,14 +98,14 @@ public class MultipleChoiceQuestionTest {
         answers.add("germany");
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> multipleChoiceQuestion.checkAnswers(answers)
+                () -> multipleChoiceWithMultipleAnswersQuestion.checkAnswers(answers)
         );
         assertEquals("Wrong answer at index 0!", exception.getMessage());
         answers.set(0, "Germany");
         answers.add("japan");
         IllegalArgumentException exception2 = assertThrows(
                 IllegalArgumentException.class,
-                () -> multipleChoiceQuestion.checkAnswers(answers)
+                () -> multipleChoiceWithMultipleAnswersQuestion.checkAnswers(answers)
         );
         assertEquals("Wrong answer at index 1!", exception2.getMessage());
         answers.set(1, "Japan");
@@ -115,7 +115,7 @@ public class MultipleChoiceQuestionTest {
         answers.add("Japan");
         IllegalArgumentException exception3 = assertThrows(
                 IllegalArgumentException.class,
-                () -> multipleChoiceQuestion.checkAnswers(answers)
+                () -> multipleChoiceWithMultipleAnswersQuestion.checkAnswers(answers)
         );
         assertEquals("Wrong number of user answers!", exception3.getMessage());
     }
@@ -135,7 +135,7 @@ public class MultipleChoiceQuestionTest {
         answers.put("Japan", false);
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> multipleChoiceQuestion = new MultipleChoiceQuestion(questionId, questionText, answers, quizId, orderInQuiz)
+                () -> multipleChoiceWithMultipleAnswersQuestion = new MultipleChoiceWithMultipleAnswersQuestion(questionId, questionText, answers, quizId, orderInQuiz)
         );
         assertEquals("At least one option must be correct", exception.getMessage());
         answers.remove("Brazil");
@@ -144,7 +144,7 @@ public class MultipleChoiceQuestionTest {
         answers.put("France", true);
         IllegalArgumentException exception2 = assertThrows(
                 IllegalArgumentException.class,
-                () -> multipleChoiceQuestion = new MultipleChoiceQuestion(questionId, questionText, answers, quizId, orderInQuiz)
+                () -> multipleChoiceWithMultipleAnswersQuestion = new MultipleChoiceWithMultipleAnswersQuestion(questionId, questionText, answers, quizId, orderInQuiz)
         );
         assertEquals("All options can't be correct", exception2.getMessage());
     }
@@ -154,41 +154,41 @@ public class MultipleChoiceQuestionTest {
     public void testCheckCalculateScore(){
         ArrayList<String> answers = new ArrayList<>();
         answers.add("France");
-        assertEquals(0.3333, multipleChoiceQuestion.calculateScore(answers), 0.001);
+        assertEquals(0.3333, multipleChoiceWithMultipleAnswersQuestion.calculateScore(answers), 0.001);
         answers.add("Spain");
-        assertEquals(0.6666, multipleChoiceQuestion.calculateScore(answers),0.001);
+        assertEquals(0.6666, multipleChoiceWithMultipleAnswersQuestion.calculateScore(answers),0.001);
         answers.add("Germany");
-        assertEquals(1, multipleChoiceQuestion.calculateScore(answers));
+        assertEquals(1, multipleChoiceWithMultipleAnswersQuestion.calculateScore(answers));
         answers.add("Japan");
-        assertEquals(0, multipleChoiceQuestion.calculateScore(answers));
+        assertEquals(0, multipleChoiceWithMultipleAnswersQuestion.calculateScore(answers));
         answers.set(3, "Brazil");
-        assertEquals(0, multipleChoiceQuestion.calculateScore(answers));
+        assertEquals(0, multipleChoiceWithMultipleAnswersQuestion.calculateScore(answers));
     }
 
     //Checks the overridden equals() function
     @Test
     public void testEquals(){
-        multipleChoiceQuestion.setImageUrl("www.link.com");
-        MultipleChoiceQuestion multipleChoiceQuestionCopy = multipleChoiceQuestion;
-        assertEquals(multipleChoiceQuestionCopy, multipleChoiceQuestion);
+        multipleChoiceWithMultipleAnswersQuestion.setImageUrl("www.link.com");
+        MultipleChoiceWithMultipleAnswersQuestion multipleChoiceWithMultipleAnswersQuestionCopy = multipleChoiceWithMultipleAnswersQuestion;
+        assertEquals(multipleChoiceWithMultipleAnswersQuestionCopy, multipleChoiceWithMultipleAnswersQuestion);
         ArrayList<Integer> randomCollection = new ArrayList<>();
-        assertNotEquals(multipleChoiceQuestion, randomCollection);
+        assertNotEquals(multipleChoiceWithMultipleAnswersQuestion, randomCollection);
         Map<String, Boolean> answers = new HashMap<>();
         answers.put("Brazil", false);
         answers.put("France", true);
-        MultipleChoiceQuestion newQuestion = new MultipleChoiceQuestion(10, "Hi", answers, 10, 1);
-        assertNotEquals(multipleChoiceQuestion, newQuestion);
-        newQuestion = new MultipleChoiceQuestion(10, "Hi", answers, 1, 1);
-        assertNotEquals(multipleChoiceQuestion, newQuestion);
-        newQuestion = new MultipleChoiceQuestion(10, "Which of these countries are located in Europe?", answers, 1, 1);
-        assertNotEquals(multipleChoiceQuestion, newQuestion);
+        MultipleChoiceWithMultipleAnswersQuestion newQuestion = new MultipleChoiceWithMultipleAnswersQuestion(10, "Hi", answers, 10, 1);
+        assertNotEquals(multipleChoiceWithMultipleAnswersQuestion, newQuestion);
+        newQuestion = new MultipleChoiceWithMultipleAnswersQuestion(10, "Hi", answers, 1, 1);
+        assertNotEquals(multipleChoiceWithMultipleAnswersQuestion, newQuestion);
+        newQuestion = new MultipleChoiceWithMultipleAnswersQuestion(10, "Which of these countries are located in Europe?", answers, 1, 1);
+        assertNotEquals(multipleChoiceWithMultipleAnswersQuestion, newQuestion);
         answers = generateCorrectAnswers();
-        newQuestion = new MultipleChoiceQuestion(10, "Which of these countries are located in Europe?", answers, 1, 1);
-        assertNotEquals(multipleChoiceQuestion, newQuestion);
-        newQuestion = new MultipleChoiceQuestion(1, "Which of these countries are located in Europe?", answers, 1, 1);
-        assertNotEquals(multipleChoiceQuestion, newQuestion);
-        newQuestion = new MultipleChoiceQuestion(1, "Which of these countries are located in Europe?", answers, 1, 0);
-        assertNotEquals(multipleChoiceQuestion, newQuestion);
+        newQuestion = new MultipleChoiceWithMultipleAnswersQuestion(10, "Which of these countries are located in Europe?", answers, 1, 1);
+        assertNotEquals(multipleChoiceWithMultipleAnswersQuestion, newQuestion);
+        newQuestion = new MultipleChoiceWithMultipleAnswersQuestion(1, "Which of these countries are located in Europe?", answers, 1, 1);
+        assertNotEquals(multipleChoiceWithMultipleAnswersQuestion, newQuestion);
+        newQuestion = new MultipleChoiceWithMultipleAnswersQuestion(1, "Which of these countries are located in Europe?", answers, 1, 0);
+        assertNotEquals(multipleChoiceWithMultipleAnswersQuestion, newQuestion);
         newQuestion.setImageUrl("www.link.com");
     }
 
@@ -199,18 +199,18 @@ public class MultipleChoiceQuestionTest {
     @Test
     public void testConstructorWithoutId(){
         Map<String, Boolean> answers = generateCorrectAnswers();
-        Question newQuestion = new MultipleChoiceQuestion("Which of these countries are located in Europe?", answers, 1, 0);
+        Question newQuestion = new MultipleChoiceWithMultipleAnswersQuestion("Which of these countries are located in Europe?", answers, 1, 0);
         assertEquals(-1, newQuestion.getQuestionId());
-        assertNotEquals(multipleChoiceQuestion, newQuestion);
+        assertNotEquals(multipleChoiceWithMultipleAnswersQuestion, newQuestion);
         newQuestion.setQuestionId(1);
-        assertEquals(multipleChoiceQuestion, newQuestion);
+        assertEquals(multipleChoiceWithMultipleAnswersQuestion, newQuestion);
     }
 
     //tests setQuestionId
     @Test
     public void testSetQuestionId(){
         Map<String, Boolean> answers = generateCorrectAnswers();
-        MultipleChoiceQuestion question = new MultipleChoiceQuestion("Hi", answers, 1, 0);
+        MultipleChoiceWithMultipleAnswersQuestion question = new MultipleChoiceWithMultipleAnswersQuestion("Hi", answers, 1, 0);
         assertEquals(-1, question.getQuestionId());
         question.setQuestionId(2);
         assertEquals(2, question.getQuestionId());

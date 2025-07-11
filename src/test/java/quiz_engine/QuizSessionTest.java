@@ -21,9 +21,6 @@ public class QuizSessionTest {
     private QuizSession quizSession;
     private QuizSession quizSession2;
 
-    private static final int ATTEMPT_ONE = 1;
-    private static final int ATTEMPT_ONE_THOUSAND = 1001;
-
     //Sets up the databases
     @BeforeEach
     public void setUp() throws SQLException {

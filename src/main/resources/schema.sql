@@ -66,7 +66,7 @@ CREATE TABLE Questions (
     question_id INT AUTO_INCREMENT PRIMARY KEY,
     quiz_id INT NOT NULL,
     question_text TEXT NOT NULL,
-    question_type ENUM('QUESTION_RESPONSE', 'FILL_IN_BLANK', 'MULTIPLE_CHOICE', 'PICTURE_RESPONSE', 'MULTI_ANSWER_ORDERED', 'MULTI_ANSWER_UNORDERED') NOT NULL,
+    question_type ENUM('QUESTION_RESPONSE', 'FILL_IN_BLANK', 'MULTIPLE_CHOICE', 'PICTURE_RESPONSE', 'MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS') NOT NULL,
     image_url VARCHAR(512),
     order_in_quiz INT,
     FOREIGN KEY (quiz_id) REFERENCES Quizzes(quiz_id) ON DELETE CASCADE
@@ -236,8 +236,8 @@ INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (6, 'P
 INSERT INTO Quizzes (quiz_id, creator_user_id, title, description) VALUES (4, 1, 'European Geography', 'Select all correct options.');
 
 -- Sample Questions for Multi-Answer Quiz
-INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (7, 4, 'Which of the following are countries in the European Union?', 'MULTI_ANSWER_UNORDERED', 0);
-INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (8, 4, 'Which of these cities are capitals of EU countries?', 'MULTI_ANSWER_UNORDERED', 1);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (7, 4, 'Which of the following are countries in the European Union?', 'MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS', 0);
+INSERT INTO Questions (question_id, quiz_id, question_text, question_type, order_in_quiz) VALUES (8, 4, 'Which of these cities are capitals of EU countries?', 'MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS', 1);
 
 -- Sample Options for Question 7
 INSERT INTO AnswerOptionsMC (question_id, option_text, is_correct) VALUES (7, 'Germany', TRUE);

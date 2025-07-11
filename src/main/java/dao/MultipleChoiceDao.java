@@ -3,18 +3,21 @@ package dao;
 import models.MultipleChoiceQuestion;
 import models.Question;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Data access object for multiple choice questions.
+ * Data access object for single-answer multiple choice questions.
  * Handles database operations for questions with predefined options
- * where users select from available choices.
+ * where users select exactly one choice from available options.
+ * Enforces that exactly one option is marked as correct.
  * Uses the "AnswerOptionsMC" table to store options with
  * their correctness flags.
  */
-
 public class MultipleChoiceDao extends AbstractQuestionDao {
 
     @Override

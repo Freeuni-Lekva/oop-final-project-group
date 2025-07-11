@@ -3,6 +3,7 @@ package factory;
 import dao.AbstractQuestionDao;
 import dao.FillInTheBlankDao;
 import dao.MultipleChoiceDao;
+import dao.MultipleChoiceWithMultipleAnswersDao;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,17 +23,24 @@ public class QuestionDaoFactoryTest {
         assertInstanceOf(FillInTheBlankDao.class, dao);
     }
 
-    //Tests if passing Picture_Response returns the correct class
+    //Tests if passing MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS returns the correct class
+    @Test
+    public void testGetMultipleChoiceWithMultipleAnswers() {
+        AbstractQuestionDao dao = QuestionDaoFactory.getDao("MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS");
+        assertInstanceOf(MultipleChoiceWithMultipleAnswersDao.class, dao);
+    }
+
+    //Tests if passing Question_Response returns the correct class
 //    @Test
-//    public void testGetPictureResponse() {
-//        AbstractQuestionDao dao = QuestionDaoFactory.getDao("PICTURE_RESPONSE");
-//        assertInstanceOf(PictureResponseDao.class, dao);
+//    public void testGetQuestionResponse() {
+//        AbstractQuestionDao dao = QuestionDaoFactory.getDao("QUESTION_RESPONSE");
+//        assertInstanceOf(QuestionResponseDao.class, dao);
 //    }
 //
     //Tests if passing Question_Response returns the correct class
 //    @Test
 //    public void testGetPictureResponse() {
-//        AbstractQuestionDao dao = QuestionDaoFactory.getDao("Question_RESPONSE");
+//        AbstractQuestionDao dao = QuestionDaoFactory.getDao("QUESTION_RESPONSE");
 //        assertInstanceOf(QuestionResponseDao.class, dao);
 //    }
 

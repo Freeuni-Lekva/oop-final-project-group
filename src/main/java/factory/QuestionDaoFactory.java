@@ -3,6 +3,7 @@ package factory;
 import dao.AbstractQuestionDao;
 import dao.FillInTheBlankDao;
 import dao.MultipleChoiceDao;
+import dao.MultipleChoiceWithMultipleAnswersDao;
 
 /**
  * Factory class for creating appropriate DAO instances based on question type.
@@ -18,9 +19,9 @@ public class QuestionDaoFactory {
      */
     public static AbstractQuestionDao getDao(String questionType) {
         switch(questionType) {
-            case "MULTIPLE_CHOICE": return new MultipleChoiceDao();
+            case "MULTIPLE_CHOICE_WITH_MULTIPLE_ANSWERS": return new MultipleChoiceWithMultipleAnswersDao();
             case "FILL_IN_BLANK": return new FillInTheBlankDao();
-            case "MULTI_ANSWER_UNORDERED": return new dao.MultiAnswerDao();
+            case "MULTIPLE_CHOICE": return new MultipleChoiceDao();
 //            case "QUESTION_RESPONSE": return new QuestionResponseDao();
 //            case "PICTURE_RESPONSE": return new PictureResponseDao();
             default: throw new IllegalArgumentException("Unknown question type: " + questionType);
