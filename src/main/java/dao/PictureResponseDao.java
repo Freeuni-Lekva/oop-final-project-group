@@ -39,7 +39,7 @@ public class PictureResponseDao extends AbstractQuestionDao{
     }
 
     @Override
-    protected Question createQuestionObject(int questionId, String questionText, Object answers, int quizId, int orderInQuiz, double maxScore) {
+    protected Question createQuestionObject(int questionId, String questionText, Object answers, int quizId, int orderInQuiz, double maxScore, String imageUrl) {
         return new PictureResponse(questionId,questionText, QuestionType.PICTURE_RESPONSE,quizId, orderInQuiz, (HashSet<String>)answers ,maxScore);
     }
 

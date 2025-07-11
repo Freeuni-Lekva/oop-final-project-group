@@ -11,6 +11,9 @@ DROP TABLE IF EXISTS UserQuizAttempts;
 DROP TABLE IF EXISTS Questions;
 DROP TABLE IF EXISTS Quizzes;
 DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Achievements;
+DROP TABLE IF EXISTS UserAchievements;
+DROP TABLE IF EXISTS Announcements;
 
 -- Users Table
 CREATE TABLE Users (
@@ -141,43 +144,43 @@ CREATE TABLE Messages (
 );
 
 -- Achievements Table
--- CREATE TABLE Achievements (
---     achievement_id INT AUTO_INCREMENT PRIMARY KEY,
---     name VARCHAR(100) NOT NULL UNIQUE,
---     description TEXT NOT NULL,
---     icon_url VARCHAR(255)
--- );
+CREATE TABLE Achievements (
+    achievement_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT NOT NULL,
+    icon_url VARCHAR(255)
+);
 
 -- UserAchievements Table
--- CREATE TABLE UserAchievements (
---     user_achievement_id INT AUTO_INCREMENT PRIMARY KEY,
---     user_id INT NOT NULL,
---     achievement_id INT NOT NULL,
---     earned_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
---     FOREIGN KEY (achievement_id) REFERENCES Achievements(achievement_id) ON DELETE CASCADE,
---     UNIQUE (user_id, achievement_id)
--- );
+CREATE TABLE UserAchievements (
+    user_achievement_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    achievement_id INT NOT NULL,
+    earned_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (achievement_id) REFERENCES Achievements(achievement_id) ON DELETE CASCADE,
+    UNIQUE (user_id, achievement_id)
+);
 
 -- Announcements Table
--- CREATE TABLE Announcements (
---     announcement_id INT AUTO_INCREMENT PRIMARY KEY,
---     admin_user_id INT NOT NULL,
---     title VARCHAR(255) NOT NULL,
---     content_text TEXT NOT NULL,
---     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     is_active BOOLEAN DEFAULT TRUE,
---     FOREIGN KEY (admin_user_id) REFERENCES Users(user_id)
--- );
+CREATE TABLE Announcements (
+    announcement_id INT AUTO_INCREMENT PRIMARY KEY,
+    admin_user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content_text TEXT NOT NULL,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (admin_user_id) REFERENCES Users(user_id)
+);
 
 -- Initial data for Achievements
--- INSERT INTO Achievements (name, description) VALUES
--- ('Amateur Author', 'The user created a quiz.'),
--- ('Prolific Author', 'The user created five quizzes.'),
--- ('Prodigious Author', 'The user created ten quizzes.'),
--- ('Quiz Machine', 'The user took ten quizzes.'),
--- ('I am the Greatest', 'The user had the highest score on a quiz.'),
--- ('Practice Makes Perfect', 'The user took a quiz in practice mode.');
+INSERT INTO Achievements (name, description) VALUES
+('Amateur Author', 'The user created a quiz.'),
+('Prolific Author', 'The user created five quizzes.'),
+('Prodigious Author', 'The user created ten quizzes.'),
+('Quiz Machine', 'The user took ten quizzes.'),
+('I am the Greatest', 'The user had the highest score on a quiz.'),
+('Practice Makes Perfect', 'The user took a quiz in practice mode.');
 -- Sample User
 INSERT INTO Users (user_id, username, email, password_hash, salt) VALUES (1, 'testuser', 'test@example.com', 'password', 'salt');
 
