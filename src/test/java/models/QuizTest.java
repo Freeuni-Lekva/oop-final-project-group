@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -227,5 +230,30 @@ public class QuizTest {
                 + " " + quiz.getQuizDisplayType().getDatabaseValue() + " " + quiz.isImmediateCorrection() + " " +
                 quiz.isPracticeModeEnabled();
         assertEquals(s, quiz.toString());
+    }
+
+    //Tests getting and setting questions to the quiz
+    @Test
+    public void testGetSetQuestions() {
+        Quiz quiz = new Quiz(1, "Test Quiz", "Description", LocalDateTime.now());
+        assertNull(quiz.getQuestions());
+
+        // Test setting questions
+        List<Question> questions = new ArrayList<>();
+        Map<String, Boolean> options = new HashMap<>();
+        options.put("Option 1", true);
+        options.put("Option 2", false);
+        Question question1 = new MultipleChoiceQuestion("Question 1?", options, 1, 0);
+        Question question2 = new MultipleChoiceQuestion("Question 2?", options, 1, 1);
+        questions.add(question1);
+        questions.add(question2);
+        quiz.setQuestions(questions);
+        List<Question> retrievedQuestions = quiz.getQuestions();
+        assertNotNull(retrievedQuestions);
+        assertEquals(2, retrievedQuestions.size());
+        assertEquals(question1, retrievedQuestions.get(0));
+        assertEquals(question2, retrievedQuestions.get(1));
+        quiz.setQuestions(null);
+        assertNull(quiz.getQuestions());
     }
 }

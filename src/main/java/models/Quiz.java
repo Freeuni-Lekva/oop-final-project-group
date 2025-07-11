@@ -145,11 +145,6 @@ public class Quiz {
         this.creationDate = creationDate;
     }
 
-    public Quiz withCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-        return this;
-    }
-
     public boolean isRandomOrder() {
         return isRandomOrder;
     }
